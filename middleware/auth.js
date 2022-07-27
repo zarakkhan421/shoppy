@@ -10,7 +10,7 @@ const auth = async (req, res, next) => {
 			process.env.ACCESS_TOKEN_SECRET
 		);
 		const loggedInUserId = decodedToken.id;
-		req.userId = loggedInUserId;
+		req.user = loggedInUserId;
 		next();
 	} catch (error) {
 		if (!authHeader || !accessToken) {

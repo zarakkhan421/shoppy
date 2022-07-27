@@ -33,7 +33,7 @@ exports.getOrder = async (req, res) => {
 
 exports.getMyOrders = async (req, res) => {
 	try {
-		const orders = await Order.find({ user: req.userId });
+		const orders = await Order.find({ user: req.user });
 		successfulResponse(res, orders);
 	} catch (error) {}
 };

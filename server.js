@@ -1,12 +1,10 @@
 const express = require("express");
 const connectDB = require("./config/db");
 const cookiepParser = require("cookie-parser");
-const bodyParser = require("body-parser");
 require("dotenv").config();
 const app = express();
 app.use(express.json());
 app.use(cookiepParser());
-app.use(bodyParser.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 5000;
 connectDB();
 

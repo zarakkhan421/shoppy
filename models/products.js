@@ -61,4 +61,8 @@ const productSchema = mongoose.Schema(
 	{ timestamps: true }
 );
 
+productSchema.post("findOneAndUpdate", async function () {
+	//
+});
+
 module.exports = mongoose.model("Products", productSchema);

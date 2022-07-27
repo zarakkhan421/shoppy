@@ -5,6 +5,10 @@ const categoriesSchema = mongoose.Schema({
 		type: String,
 		required: [true, "please provide category name"],
 	},
+	slug: {
+		type: String,
+		unique: true,
+	},
 	products: [
 		{
 			type: mongoose.Schema.ObjectId,
@@ -13,4 +17,4 @@ const categoriesSchema = mongoose.Schema({
 	],
 });
 
-module.exports = mongoose.model("categories", categoriesSchema);
+module.exports = mongoose.model("Categories", categoriesSchema);

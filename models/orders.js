@@ -45,7 +45,6 @@ const orderSchema = new mongoose.Schema(
 		user: {
 			type: mongoose.Schema.ObjectId,
 			ref: "Users",
-			required: [true, "please provide user reference"],
 		},
 		totalPrice: {
 			type: Number,

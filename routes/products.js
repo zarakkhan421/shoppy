@@ -8,12 +8,16 @@ const {
 	updateProduct,
 } = require("../controllers/products");
 const { auth } = require("../middleware/auth");
+const { roles } = require("../middleware/roles");
 
-router.route("/").get(getProducts).post(auth, createProduct);
+router
+	.route("/")
+	.get(getProducts)
+	.post(auth, roles(["admin"]), createProduct);
 router
 	.route("/:id")
 	.get(getProduct)
-	.delete(auth, deleteProduct)
-	.put(auth, updateProduct);
+	.delete(auth, roles(["admin"]), deleteProduct)
+	.put(auth, roles(["admin", "editor"]), updateProduct);
 
 module.exports = router;

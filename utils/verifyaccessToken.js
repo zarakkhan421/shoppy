@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const verifyAccessToken = (res, accessToken) => {
+	console.log("vvver");
 	try {
 		const decodedToken = jwt.verify(
 			accessToken,

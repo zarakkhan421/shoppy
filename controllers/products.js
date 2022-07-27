@@ -1,3 +1,5 @@
+const categories = require("../models/categories");
+const Categories = require("../models/categories");
 const Product = require("../models/products");
 const { failedResponse } = require("../utils/failedResponse");
 const { filter } = require("../utils/filter");
@@ -6,7 +8,7 @@ const { successfulResponse } = require("../utils/successfulResponse");
 exports.getProduct = async (req, res) => {
 	try {
 		const product = await Product.findById(req.params.id);
-		successfulResponse(res, product);
+		successfulResponse(res, { product });
 	} catch (error) {
 		failedResponse(res, error);
 	}
@@ -24,11 +26,15 @@ exports.getProducts = async (req, res) => {
 			const products = await Product.find()
 				.where({ price: conditions })
 				.limit(resultPerpage)
-				.skip(skip);
+				.skip(skip)
+				.populate("categories");
 			successfulResponse(res, { count, products });
 		} else {
 			const count = await Product.count();
-			const products = await Product.find().limit(resultPerpage).skip(skip);
+			const products = await Product.find()
+				.limit(resultPerpage)
+				.skip(skip)
+				.populate("categories");
 			successfulResponse(res, { count, products });
 		}
 	} catch (error) {
@@ -36,15 +42,23 @@ exports.getProducts = async (req, res) => {
 	}
 };
 
+exports.getProductsByCategory = async (req, res) => {
+	try {
+		const products = await Categories.findOne({
+			slug: req.params.slug,
+		}).populate("products");
+		successfulResponse(res, products);
+	} catch (error) {
+		failedResponse(res, error);
+	}
+};
 exports.createProduct = async (req, res) => {
 	try {
-		//req.body = req.userId;
 		req.body = {
-			user: req.userId,
+			user: req.user,
 			...req.body,
 		};
 		const product = await Product.create(req.body);
-		console.log("s");
 		successfulResponse(res, product);
 	} catch (error) {
 		failedResponse(res, error);
@@ -62,11 +76,21 @@ exports.deleteProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
 	try {
-		//const product = await Product.findById(req.params.id); can be used to find whether or not product exist
-		const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-			new: true,
-		});
-		successfulResponse(res, product);
+		if (req.body.categories) {
+			const product = await Product.findOneAndUpdate(
+				req.params.id,
+				{ $addToSet: { categories: req.body.categories } },
+				{
+					new: true,
+				}
+			);
+			successfulResponse(res, product);
+		} else {
+			const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+				new: true,
+			});
+			successfulResponse(res, product);
+		}
 	} catch (error) {
 		failedResponse(res, error);
 	}
