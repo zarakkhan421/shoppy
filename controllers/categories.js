@@ -3,6 +3,7 @@ const { failedResponse } = require("../utils/failedResponse");
 const { successfulResponse } = require("../utils/successfulResponse");
 const slugify = require("slugify");
 const Products = require("../models/products");
+const mongoose = require("mongoose");
 
 exports.getCategories = async (req, res) => {
 	try {
@@ -39,10 +40,19 @@ exports.updateCategory = async (req, res) => {
 };
 
 exports.deleteCategory = async (req, res) => {
-	try {
-		const category = await Category.findByIdAndRemove(req.params.id);
-		successfulResponse(res, category);
-	} catch (error) {
-		failedResponse(res, error);
-	}
+	const id = mongoose.Types.ObjectId(req.params.id);
+	console.log(
+		"🚀 ~ file: categories.js ~ line 45 ~ exports.deleteCategory ~ id",
+		id
+	);
+	const products = await Products.updateMany(
+		{ categories: req.params.id },
+		{ $pull: { categories: id } }
+	);
+	console.log(
+		"🚀 ~ file: categories.js ~ line 50 ~ exports.deleteCategory ~ Products",
+		Products
+	);
+	const category = await Category.findById(req.params.id).remove();
+	successfulResponse(res, { category, products });
 };

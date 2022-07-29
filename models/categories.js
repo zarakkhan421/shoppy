@@ -16,5 +16,10 @@ const categoriesSchema = mongoose.Schema({
 		},
 	],
 });
-
+mongoose
+	.model("Categories", categoriesSchema)
+	.watch()
+	.on("change", (data) => {
+		console.log(data);
+	});
 module.exports = mongoose.model("Categories", categoriesSchema);
