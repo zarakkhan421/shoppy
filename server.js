@@ -11,11 +11,9 @@ connectDB();
 const products = require("./routes/products");
 const user = require("./routes/users");
 const orders = require("./routes/orders");
-const categories = require("./routes/categories");
 
 app.use("/api/products", products);
 app.use("/api/user", user);
 app.use("/api/orders", orders);
-app.use("/api/categories", categories);
 
 app.listen(PORT, () => console.log(`server running on ${PORT}`));
