@@ -1,15 +1,21 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const userSchema = mongoose.Schema(
 	{
 		name: {
 			type: String,
 			required: [true, "please provide a name"],
+			minLength: [3, ",min length for name is 3"],
+			maxLength: [15, ",max length for name is 15"],
+			trim: true,
 		},
 		email: {
 			type: String,
 			required: [true, "please provide an email"],
 			unique: true,
+			validate: [validator.isEmail, "should be email"],
+			trim: true,
 		},
 		password: {
 			type: String,
@@ -23,6 +29,8 @@ const userSchema = mongoose.Schema(
 			required: true,
 			enum: ["admin", "editor", "user"],
 		},
+		resetPasswordToken: String,
+		resetPasswordExpire: Date,
 	},
 	{ timestamps: true }
 );

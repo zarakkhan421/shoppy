@@ -56,11 +56,12 @@ const productSchema = mongoose.Schema(
 	},
 	{ timestamps: true }
 );
-mongoose
-	.model("Products", productSchema)
-	.watch()
-	.on("change", (data) => {
-		console.log(data);
-	});
+
+// mongoose
+// 	.model("Products", productSchema)
+// 	.watch()
+// 	.on("change", (data) => {
+// 		console.log(data);
+// 	});
 
 module.exports = mongoose.model("Products", productSchema);
