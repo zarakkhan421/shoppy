@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+// takes a token and return it decoded
 const verifyRefreshToken = (res, refreshToken) => {
 	try {
 		const decodedToken = jwt.verify(

@@ -44,6 +44,7 @@ exports.login = async (req, res) => {
 	try {
 		const { email, password } = req.body;
 		const foundUser = await User.findOne({ email }).select("+password");
+		console.log(foundUser);
 		if (!foundUser) {
 			failedResponse(res, null, 403, "user not found");
 		}
@@ -121,27 +122,38 @@ exports.forgetPassword = async (req, res) => {
 };
 
 exports.resetPassword = async (req, res) => {
-	const resetPasswordToken = crypto
-		.createHash("sha256")
-		.update(req.params.resetToken)
-		.digest("hex");
-	const foundUser = await User.findOne({
-		resetPasswordToken,
-		resetPasswordExpire: { $gt: Date.now() },
-	});
-	if (!foundUser) {
-		failedResponse(res, { payload: "" }, 404, "user not found or invalid link");
-	} else if (!req.body.password) {
-		failedResponse(res, { payload: "" }, 404, "enter a password");
-	} else {
-		foundUser.password = req.body.password;
-		foundUser.resetPasswordToken = undefined;
-		foundUser.resetPasswordExpire = undefined;
-		await foundUser.save();
+	try {
+		const resetPasswordToken = crypto
+			.createHash("sha256")
+			.update(req.params.resetToken)
+			.digest("hex");
+		const foundUser = await User.findOne({
+			resetPasswordToken,
+			resetPasswordExpire: { $gt: Date.now() },
+		});
+		if (!foundUser) {
+			failedResponse(
+				res,
+				{ payload: "" },
+				404,
+				"user not found or invalid link"
+			);
+		} else if (!req.body.password) {
+			failedResponse(res, { payload: "" }, 404, "enter a password");
+		} else {
+			const salt = await bcrypt.genSalt(10);
+			const hashedPassword = await bcrypt.hash(req.body.password, salt);
+			foundUser.password = hashedPassword;
+			foundUser.resetPasswordToken = undefined;
+			foundUser.resetPasswordExpire = undefined;
+			await foundUser.save();
 
-		const accessToken = sendAccessToken(foundUser.id);
-		const refreshToken = sendRefreshToken(foundUser.id);
-		res.cookie("token", refreshToken, cookieOptions);
-		successfulResponse(res, { accessToken });
+			const accessToken = sendAccessToken(foundUser.id);
+			const refreshToken = sendRefreshToken(foundUser.id);
+			res.cookie("token", refreshToken, cookieOptions);
+			successfulResponse(res, { accessToken });
+		}
+	} catch (error) {
+		failedResponse(res, error);
 	}
 };

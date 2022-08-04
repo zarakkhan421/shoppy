@@ -3,7 +3,6 @@ const { failedResponse } = require("../utils/failedResponse");
 const { filter } = require("../utils/filter");
 const { successfulResponse } = require("../utils/successfulResponse");
 const _ = require("lodash");
-const { mongoose } = require("mongoose");
 
 exports.getProduct = async (req, res) => {
 	try {
@@ -16,12 +15,21 @@ exports.getProduct = async (req, res) => {
 
 exports.getProducts = async (req, res) => {
 	try {
-		const resultPerpage = 3;
+		const resultPerpage = 30;
 		const currentPage = req.query.page || 1;
 		const skip = resultPerpage * (currentPage - 1);
 		// Math.ceil can be used on front end for number of pages on frontend
 		if (req.query.price) {
+			console.log(
+				"🚀 ~ file: products.js ~ line 23 ~ exports.getProducts= ~ req.query.price",
+				req.query.price
+			);
 			let conditions = filter(req.query.price);
+			console.log(
+				"🚀 ~ file: products.js ~ line 28 ~ exports.getProducts= ~ conditions",
+				conditions
+			);
+
 			const count = await Product.where({ price: conditions }).count();
 			const products = await Product.find()
 				.where({ price: conditions })

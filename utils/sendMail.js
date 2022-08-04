@@ -1,5 +1,5 @@
 const nodeMailer = require("nodemailer");
-
+// option is an object that has to:, sunject:,text: and text is email body
 const sendMail = async (options) => {
 	const transporter = nodeMailer.createTransport({
 		host: "smtp.google.com",
