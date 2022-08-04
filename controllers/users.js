@@ -14,25 +14,29 @@ const { findOneAndUpdate } = require("../models/users");
 
 exports.register = async (req, res) => {
 	try {
-		const { name, email, password } = req.body;
+		const { name, email, password, confirmPassword } = req.body;
 		const existingUser = await User.findOne({ email });
 		if (existingUser) {
 			failedResponse(res, null, 406, "user already exist");
-			return;
-		}
-		const salt = await bcrypt.genSalt(10);
-		const hashedPassword = await bcrypt.hash(password, salt);
-		const user = await User.create({
-			name,
-			email,
-			password: hashedPassword,
-		});
-		if (user) {
+		} else if (password !== confirmPassword) {
+			failedResponse(
+				res,
+				null,
+				400,
+				"password does not match confirm password"
+			);
+		} else {
+			const salt = await bcrypt.genSalt(10);
+			const hashedPassword = await bcrypt.hash(password, salt);
+			const user = await User.create({
+				name,
+				email,
+				password: hashedPassword,
+			});
 			const accessToken = sendAccessToken(user.id);
 			const refreshToken = sendRefreshToken(user.id);
 			// refersh token to be added to user concerned as well
 			res.cookie("token", refreshToken, cookieOptions);
-
 			successfulResponse(res, { user, accessToken });
 		}
 	} catch (error) {
@@ -92,7 +96,7 @@ exports.logout = async (req, res) => {
 exports.forgetPassword = async (req, res) => {
 	const foundUser = await User.findOne({ email: req.body.email });
 	if (!foundUser) {
-		failedResponse(res, { payload: "" }, 400, `${req.body.email} not found`);
+		failedResponse(res, null, 400, `${req.body.email} not found`);
 	}
 	const unHashedToken = crypto.randomBytes(20).toString("hex");
 
@@ -132,14 +136,16 @@ exports.resetPassword = async (req, res) => {
 			resetPasswordExpire: { $gt: Date.now() },
 		});
 		if (!foundUser) {
+			failedResponse(res, null, 404, "user not found or invalid link");
+		} else if (!req.body.password || !req.body.confirmPassword) {
+			failedResponse(res, null, 404, "enter a password and confirm password");
+		} else if (req.body.password !== req.body.confirmPassword) {
 			failedResponse(
 				res,
-				{ payload: "" },
-				404,
-				"user not found or invalid link"
+				null,
+				400,
+				"password does not match confirm password"
 			);
-		} else if (!req.body.password) {
-			failedResponse(res, { payload: "" }, 404, "enter a password");
 		} else {
 			const salt = await bcrypt.genSalt(10);
 			const hashedPassword = await bcrypt.hash(req.body.password, salt);
