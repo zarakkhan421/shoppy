@@ -6,10 +6,16 @@ const {
 	getProduct,
 	deleteProduct,
 	updateProduct,
+	getFeaturedProducts,
+	getSaleProducts,
+	getSearchedProducts,
 } = require("../controllers/products");
 const { auth } = require("../middleware/auth");
 const { roles } = require("../middleware/roles");
 
+router.route("/search/:search_term").get(getSearchedProducts);
+router.route("/featured").get(getFeaturedProducts);
+router.route("/sale").get(getSaleProducts);
 router
 	.route("/")
 	.get(getProducts)

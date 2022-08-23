@@ -1,8 +1,36 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 
 const orderSchema = new mongoose.Schema(
 	{
-		shippingInfo: {
+		customerDetails: {
+			firstName: {
+				type: String,
+				required: [true, "please provide first name"],
+				minLength: [3, ",min length for name is 3"],
+				maxLength: [15, ",max length for name is 15"],
+				trim: true,
+			},
+			lastName: {
+				type: String,
+				required: [true, "please provide last name"],
+				minLength: [3, ",min length for name is 3"],
+				maxLength: [15, ",max length for name is 15"],
+				trim: true,
+			},
+			email: {
+				type: String,
+				required: [true, "please provide an email"],
+				unique: true,
+				validate: [validator.isEmail, "should be email"],
+				trim: true,
+			},
+			phoneNumber: {
+				type: String,
+				required: [true, "please provide a phone number"],
+			},
+		},
+		deliveryAddress: {
 			address: {
 				type: String,
 				required: [true, "please provide address"],
@@ -15,9 +43,9 @@ const orderSchema = new mongoose.Schema(
 				type: String,
 				required: [true, "please provide state"],
 			},
-			phoneNumber: {
-				type: String,
-				required: [true, "please provide a phone number"],
+			zipCode: {
+				type: Number,
+				required: [true, "please provide a zip code"],
 			},
 		},
 		orderItems: [
@@ -33,20 +61,26 @@ const orderSchema = new mongoose.Schema(
 				quantity: {
 					type: Number,
 					required: [true, "please provide quantity of order items"],
-					default: 0,
+					default: 1,
 				},
 				product: {
 					type: mongoose.Schema.ObjectId,
 					ref: "Products",
 					required: [true, "please provide product reference"],
 				},
+				sale: {
+					type: Number,
+					default: 0,
+					required: [true, "please provide sale"],
+				},
 			},
 		],
 		user: {
 			type: mongoose.Schema.ObjectId,
 			ref: "Users",
+			default: "",
 		},
-		totalPrice: {
+		totalCost: {
 			type: Number,
 			required: [true, "please provide total order price"],
 		},

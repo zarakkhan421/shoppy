@@ -1,17 +1,20 @@
 const Order = require("../models/orders");
 const { failedResponse } = require("../utils/failedResponse");
 const { successfulResponse } = require("../utils/successfulResponse");
-const { totalOrderPrice } = require("../utils/totalPrice");
+const { totalOrderCost } = require("../utils/totalOrderCost");
 
 exports.createOrder = async (req, res) => {
 	try {
-		const { shippingInfo, orderItems, user } = req.body;
-		const totalPrice = totalOrderPrice(orderItems);
+		const { customerDetails, deliveryAddress, orderItems, user, shippingCost } =
+			req.body;
+		const totalCost = totalOrderCost(orderItems);
 		const order = await Order.create({
-			shippingInfo,
+			customerDetails,
+			deliveryAddress,
 			orderItems,
 			user,
-			totalPrice,
+			totalCost,
+			shippingCost,
 		});
 		successfulResponse(res, order);
 	} catch (error) {

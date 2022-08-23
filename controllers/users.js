@@ -1,6 +1,5 @@
 const User = require("../models/users");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { successfulResponse } = require("../utils/successfulResponse");
 const { failedResponse } = require("../utils/failedResponse");
@@ -10,72 +9,184 @@ const { cookieOptions } = require("../config/cookieOptions");
 const { verifyRefreshToken } = require("../utils/verifyRefreshToken");
 const crypto = require("crypto");
 const { sendMail } = require("../utils/sendMail");
-const { findOneAndUpdate } = require("../models/users");
+const sendUserData = require("../utils/sendUserData");
 
 exports.register = async (req, res) => {
 	try {
-		const { name, email, password, confirmPassword } = req.body;
+		const { firstName, lastName, email, password, confirmPassword } = req.body;
 		const existingUser = await User.findOne({ email });
 		if (existingUser) {
-			failedResponse(res, null, 406, "user already exist");
-		} else if (password !== confirmPassword) {
-			failedResponse(
+			return failedResponse(res, null, 406, "user already exist");
+		}
+		if (password !== confirmPassword) {
+			return failedResponse(
 				res,
 				null,
 				400,
 				"password does not match confirm password"
 			);
-		} else {
-			const salt = await bcrypt.genSalt(10);
-			const hashedPassword = await bcrypt.hash(password, salt);
-			const user = await User.create({
-				name,
-				email,
-				password: hashedPassword,
-			});
-			const accessToken = sendAccessToken(user.id);
-			const refreshToken = sendRefreshToken(user.id);
-			// refersh token to be added to user concerned as well
-			res.cookie("token", refreshToken, cookieOptions);
-			successfulResponse(res, { user, accessToken });
 		}
+		const salt = await bcrypt.genSalt(10);
+		const hashedPassword = await bcrypt.hash(password, salt);
+		const userCreated = await User.create({
+			firstName,
+			lastName,
+			email,
+			password: hashedPassword,
+		});
+		const user = sendUserData(userCreated);
+		const accessToken = sendAccessToken(user.id);
+		const refreshToken = sendRefreshToken(user.id);
+		// refersh token to be added to user concerned as well
+		res.cookie("token", refreshToken, cookieOptions);
+		successfulResponse(res, { user, accessToken });
 	} catch (error) {
 		failedResponse(res, error, 406, "responded with error");
 	}
 };
 
 exports.login = async (req, res) => {
+	console.log("sdd");
 	try {
 		const { email, password } = req.body;
-		const foundUser = await User.findOne({ email }).select("+password");
-		console.log(foundUser);
+		let foundUser = await User.findOne({ email }).select("+password");
+
 		if (!foundUser) {
-			failedResponse(res, null, 403, "user not found");
+			return failedResponse(res, null, 403, "user not found");
 		}
 		const matchUser = await bcrypt.compare(password, foundUser.password);
 		if (matchUser) {
 			const accessToken = sendAccessToken(foundUser.id);
 			const refreshToken = sendRefreshToken(foundUser.id);
 
-			// refersh token to be added to user concerned as wel
+			// refersh token to be added to user concerned as well
 			res.cookie("token", refreshToken, cookieOptions);
+
 			// foundUser should be removed in production
-			successfulResponse(res, { foundUser, matchUser, accessToken });
+			const user = sendUserData(foundUser);
+			console.log(user);
+			successfulResponse(res, { user, accessToken });
 		}
 	} catch (error) {
 		failedResponse(res, error);
 	}
 };
 
-exports.token = async (req, res) => {
+exports.updatePassword = async (req, res) => {
+	try {
+		const founduser = await User.findById(req.user).select("+password");
+
+		if (!founduser) {
+			return failedResponse(res, null, 400, "this user does not exist");
+		}
+		const matchedPassword = await bcrypt.compare(
+			req.body.oldPassword,
+			founduser.password
+		);
+		if (!matchedPassword) {
+			return failedResponse(res, null, 400, "old passoword is invalid");
+		}
+		if (req.body.password !== req.body.confirmPassword) {
+			return failedResponse(
+				res,
+				null,
+				400,
+				"password does not match confirm password"
+			);
+		}
+		const salt = await bcrypt.genSalt(10);
+		const hashedPassword = await bcrypt.hash(req.body.password, salt);
+		const user = await User.findByIdAndUpdate(
+			req.user,
+			{
+				password: hashedPassword,
+			},
+			{ new: true }
+		);
+		successfulResponse(res, { user }, 201, "password updated successfully");
+	} catch (error) {
+		failedResponse(res, error);
+	}
+};
+
+exports.updateProfile = async (req, res) => {
+	try {
+		// destructure each value from body and not update all body by its self as it may update passowrd accidentaly with has separate route and controller
+		const { firstName, lastName, phoneNumber, addresses } = req.body;
+		const user = await User.findByIdAndUpdate(
+			req.user,
+			{ firstName, lastName, phoneNumber, addresses },
+			{ new: true }
+		);
+		successfulResponse(res, { user }, 201, "user updated");
+	} catch (error) {
+		failedResponse(res, error);
+	}
+};
+
+exports.updateRole = async (req, res) => {
+	try {
+		const { role, email } = req.body;
+		if (email === "zarakkhan421@gmail.com") {
+			return failedResponse(res, null, 400, "you can not change zarak's role");
+		}
+		const user = await User.findOneAndUpdate(email, { role }, { new: true });
+		successfulResponse(res, { user }, 201, "user role changed");
+	} catch (error) {
+		failedResponse(res, error);
+	}
+};
+
+exports.getUsers = async (req, res) => {
+	try {
+		const users = await User.find();
+		successfulResponse(res, { users });
+	} catch (error) {
+		failedResponse(res, error);
+	}
+};
+
+exports.getUser = async (req, res) => {
+	try {
+		const user = await User.findById(req.params.id);
+		successfulResponse(res, { user });
+	} catch (error) {
+		failedResponse(res, null, 400, "failed to get user");
+	}
+};
+
+exports.getCheckoutDetailsById = async (req, res) => {
+	try {
+		const user = await User.findById(req.params.id);
+		const checkoutDetails = {
+			addresses: user.addresses,
+			phoneNumber: user.phoneNumber,
+		};
+		successfulResponse(res, { checkoutDetails });
+	} catch (error) {
+		failedResponse(res, error);
+	}
+};
+
+exports.deleteUser = async (req, res) => {
+	try {
+		const user = await User.findByIdAndDelete(req.params.id);
+		successfulResponse(res, { user }, 200, "user deleted");
+	} catch (error) {
+		failedResponse(res, error);
+	}
+};
+
+exports.refreshAccessToken = async (req, res) => {
+	console.log("reached");
 	if (!req.cookies.token) {
-		failedResponse(res, null, 401, "token not found");
+		return failedResponse(res, null, 401, "token not found");
 	}
 	const refreshToken = req.cookies.token;
 	// here refresh token can be checked with one stored in database against user concerned; it may allows server side to logout later
 	const decodedToken = verifyRefreshToken(res, refreshToken);
 	if (!decodedToken) {
-		failedResponse(res, null, 403, "invalid token");
+		return failedResponse(res, null, 403, "invalid token");
 	}
 	const accessToken = sendAccessToken(decodedToken.id);
 	successfulResponse(res, { accessToken });
@@ -83,7 +194,7 @@ exports.token = async (req, res) => {
 
 exports.logout = async (req, res) => {
 	if (!req.cookies.token) {
-		successfulResponse(res, null);
+		return successfulResponse(res, null);
 	}
 	// if cookie is found then search database based on email and clear it
 	const refreshToken = req.cookies.token;
@@ -96,7 +207,7 @@ exports.logout = async (req, res) => {
 exports.forgetPassword = async (req, res) => {
 	const foundUser = await User.findOne({ email: req.body.email });
 	if (!foundUser) {
-		failedResponse(res, null, 400, `${req.body.email} not found`);
+		return failedResponse(res, null, 400, `${req.body.email} not found`);
 	}
 	const unHashedToken = crypto.randomBytes(20).toString("hex");
 
@@ -122,7 +233,7 @@ exports.forgetPassword = async (req, res) => {
 			resetPasswordExpire: Date.now() + 15 * 60 * 1000,
 		}
 	);
-	successfulResponse(res, user, 200, `email sent to ${user.email}`);
+	successfulResponse(res, { user }, 200, `email sent to ${user.email}`);
 };
 
 exports.resetPassword = async (req, res) => {
@@ -136,29 +247,35 @@ exports.resetPassword = async (req, res) => {
 			resetPasswordExpire: { $gt: Date.now() },
 		});
 		if (!foundUser) {
-			failedResponse(res, null, 404, "user not found or invalid link");
-		} else if (!req.body.password || !req.body.confirmPassword) {
-			failedResponse(res, null, 404, "enter a password and confirm password");
-		} else if (req.body.password !== req.body.confirmPassword) {
-			failedResponse(
+			return failedResponse(res, null, 404, "user not found or invalid link");
+		}
+		if (!req.body.password || !req.body.confirmPassword) {
+			return failedResponse(
+				res,
+				null,
+				404,
+				"enter a password and confirm password"
+			);
+		}
+		if (req.body.password !== req.body.confirmPassword) {
+			return failedResponse(
 				res,
 				null,
 				400,
 				"password does not match confirm password"
 			);
-		} else {
-			const salt = await bcrypt.genSalt(10);
-			const hashedPassword = await bcrypt.hash(req.body.password, salt);
-			foundUser.password = hashedPassword;
-			foundUser.resetPasswordToken = undefined;
-			foundUser.resetPasswordExpire = undefined;
-			await foundUser.save();
-
-			const accessToken = sendAccessToken(foundUser.id);
-			const refreshToken = sendRefreshToken(foundUser.id);
-			res.cookie("token", refreshToken, cookieOptions);
-			successfulResponse(res, { accessToken });
 		}
+		const salt = await bcrypt.genSalt(10);
+		const hashedPassword = await bcrypt.hash(req.body.password, salt);
+		foundUser.password = hashedPassword;
+		foundUser.resetPasswordToken = undefined;
+		foundUser.resetPasswordExpire = undefined;
+		await foundUser.save();
+
+		const accessToken = sendAccessToken(foundUser.id);
+		const refreshToken = sendRefreshToken(foundUser.id);
+		res.cookie("token", refreshToken, cookieOptions);
+		successfulResponse(res, { accessToken });
 	} catch (error) {
 		failedResponse(res, error);
 	}

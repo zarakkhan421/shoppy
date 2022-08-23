@@ -3,27 +3,20 @@ const { failedResponse } = require("../utils/failedResponse");
 
 const auth = async (req, res, next) => {
 	const authHeader = req.headers.authorization;
-	try {
-		const accessToken = authHeader.split(" ")[1];
-		const decodedToken = jwt.verify(
-			accessToken,
-			process.env.ACCESS_TOKEN_SECRET
-		);
-		const loggedInUserId = decodedToken.id;
-		req.user = loggedInUserId;
-		next();
-	} catch (error) {
-		if (!authHeader || !accessToken) {
-			failedResponse(
-				res,
-				null,
-				403,
-				"auth header or access token not found, please login"
-			);
-		} else {
-			failedResponse(res, error, 403, "auth error");
-		}
+	const accessToken = authHeader.split(" ")[1];
+	// try {
+	if (!authHeader || !accessToken) {
+		return failedResponse(res, null, 403, "no auth header found");
 	}
+	console.log("asasdas", accessToken);
+	const decodedToken = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+	console.log("dssdsd", decodedToken);
+	const loggedInUserId = decodedToken.id;
+	req.user = loggedInUserId;
+	next();
+	// } catch (error) {
+	// 	failedResponse(res, error, 403, "auth error");
+	// }
 };
 
 module.exports = { auth };

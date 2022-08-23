@@ -1,5 +1,5 @@
 // takes array of objects; each object has a key/value pair of price:value; it adds and return prices in all objects in array
-const totalOrderPrice = (orderItems) => {
+const totalOrderCost = (orderItems) => {
 	let totalPrice = 0;
 	for (let i = 0; i < orderItems.length; i++) {
 		totalPrice += orderItems[i].price;
@@ -7,4 +7,4 @@ const totalOrderPrice = (orderItems) => {
 	return totalPrice;
 };
 
-module.exports = { totalOrderPrice };
+module.exports = { totalOrderCost };

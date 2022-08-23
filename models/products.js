@@ -53,6 +53,14 @@ const productSchema = mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		sale: {
+			type: Number,
+			default: 0,
+		},
+		featured: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{ timestamps: true }
 );
