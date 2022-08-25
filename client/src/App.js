@@ -18,6 +18,13 @@ import Search from "./pages/Search";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import EditProfile from "./pages/dashboard/outlets/EditProfile";
+import Orders from "./pages/dashboard/outlets/Orders";
+import MyOrders from "./pages/dashboard/outlets/MyOrders";
+import OrderStatus from "./pages/dashboard/outlets/OrderStatus";
+import Reviews from "./pages/dashboard/outlets/Reviews";
+import MyReviews from "./pages/dashboard/outlets/MyReviews";
+import CreateReview from "./pages/dashboard/outlets/CreateReview";
+import EditReview from "./pages/dashboard/outlets/EditReview";
 
 function App() {
 	return (
@@ -50,12 +57,7 @@ function App() {
 				{/* dashboard routes */}
 				<Route
 					path="/dashboard"
-					element={
-						<ProtectedRoute
-							AllowedRoles={["admin", "editor"]}
-							Component={Dashboard}
-						/>
-					}
+					element={<ProtectedRoute Component={Dashboard} />}
 				>
 					{/* products/* */}
 					<Route path="products">
@@ -97,6 +99,51 @@ function App() {
 							/>
 						}
 					/>
+					{/* orders */}
+					<Route path="orders">
+						<Route index element={<ProtectedRoute Component={MyOrders} />} />
+						<Route
+							path="all"
+							element={
+								<ProtectedRoute
+									AllowedRoles={["admin", "editor"]}
+									Component={Orders}
+								/>
+							}
+						/>
+						<Route
+							path="status/:id/:item"
+							element={
+								<ProtectedRoute
+									AllowedRoles={["admin", "editor"]}
+									Component={OrderStatus}
+								/>
+							}
+						/>
+					</Route>
+					{/* end orders routes */}
+					{/* reviews routes */}
+					<Route path="reviews">
+						<Route index element={<ProtectedRoute Component={MyReviews} />} />
+						<Route
+							path="create/:order/:item"
+							element={<ProtectedRoute Component={CreateReview} />}
+						/>
+						<Route
+							path="all"
+							element={
+								<ProtectedRoute
+									AllowedRoles={["admin", "editor"]}
+									Component={Reviews}
+								/>
+							}
+						/>
+						<Route
+							path="edit/:id"
+							element={<ProtectedRoute Component={EditReview} />}
+						/>
+					</Route>
+					{/* end reviews routes */}
 				</Route>
 				{/* end dashboard routes */}
 

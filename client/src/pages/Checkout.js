@@ -4,8 +4,9 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 import orderSummary from "../utils/orderSummary";
 import { getIsLoggedIn, getUserId } from "../features/userSlice";
 import { useSelector } from "react-redux";
+import useAxios from "../hooks/useAxios";
 const Checkout = () => {
-	const { getCart } = useLocalStorage();
+	const { getCart, resetCart } = useLocalStorage();
 	const [checkoutDetails, setCheckoutDetails] = useState({});
 	const [isChangedAddresses, setIsChangedAddresses] = useState(false);
 
@@ -38,10 +39,15 @@ const Checkout = () => {
 	const { subTotal, totalShippingCost, total, shippingCostPerItem } =
 		orderSummary(cart);
 	const axiosPrivateInstance = useAxiosPrivate();
+	const axiosInstance = useAxios();
 	const userId = useSelector(getUserId);
 	const isLoggedIn = useSelector(getIsLoggedIn);
 	console.log("1");
-	const user = useSelector((state) => state.auth.user.serverData.user);
+	const user = useSelector((state) => {
+		if (isLoggedIn) {
+			return state.auth.user.serverData.user;
+		}
+	});
 
 	useEffect(() => {
 		console.log("2");
@@ -50,6 +56,7 @@ const Checkout = () => {
 			setLastName(user.lastName);
 			setPhoneNumber(user.phoneNumber);
 			setEmail(user.email);
+
 			const getCheckoutDetails = async () => {
 				const response = await axiosPrivateInstance.get(
 					`user/checkout-details/${userId}`
@@ -61,6 +68,8 @@ const Checkout = () => {
 			};
 			getCheckoutDetails();
 			console.log("4");
+		} else {
+			setNewAddressRadio(true);
 		}
 	}, []);
 
@@ -168,10 +177,37 @@ const Checkout = () => {
 		};
 
 		try {
-			const response = await axiosPrivateInstance.post("/orders", order);
+			const response = await axiosInstance.post("/orders", order);
 			console.log(response);
+			if (response.data.success) {
+				resetCart();
+			}
 		} catch (error) {
 			console.log(error);
+		}
+		if (updateAddressesCheck) {
+			const data = {
+				addresses: {
+					shippingAddress: {
+						address: shippingAddress,
+						state: shippingState,
+						city: shippingCity,
+						zipCode: shippingZipCode,
+					},
+					homeAddress: {
+						address: homeAddress,
+						state: homeState,
+						city: homeCity,
+						zipCode: homeZipCode,
+					},
+				},
+			};
+			try {
+				const response = await axiosPrivateInstance.put("/user", data);
+				console.log(response);
+			} catch (error) {
+				console.log(error);
+			}
 		}
 		console.log(order);
 		console.log("order items", orderItems);
@@ -228,27 +264,38 @@ const Checkout = () => {
 					<h2>Delivery Details</h2>
 					{/* radios */}
 					<div className="flex">
-						<input
-							type="radio"
-							name="homeAddressRadio"
-							checked={homeAddressRadio}
-							onChange={onChangeAddressHandler}
-						/>
-						<label htmlFor="">Same as Home Address</label>
-						<input
-							type="radio"
-							name="shippingAddressRadio"
-							checked={shippingAddressRadio}
-							onChange={onChangeAddressHandler}
-						/>
-						<label htmlFor="">Same as Shipping Address</label>
-						<input
-							type="radio"
-							name="newAddressRadio"
-							checked={newAddressRadio}
-							onChange={onChangeAddressHandler}
-						/>
-						<label htmlFor="">Enter New Delivery Address</label>
+						{isLoggedIn && (
+							<>
+								<input
+									type="radio"
+									name="homeAddressRadio"
+									checked={homeAddressRadio}
+									onChange={onChangeAddressHandler}
+								/>
+								<label htmlFor="">Same as Home Address</label>
+								<input
+									type="radio"
+									name="shippingAddressRadio"
+									checked={shippingAddressRadio}
+									onChange={onChangeAddressHandler}
+								/>
+								<label htmlFor="">Same as Shipping Address</label>
+							</>
+						)}
+
+						{isLoggedIn ? (
+							<>
+								<input
+									type="radio"
+									name="newAddressRadio"
+									checked={newAddressRadio}
+									onChange={onChangeAddressHandler}
+								/>
+								<label htmlFor="">Enter New Delivery Address</label>
+							</>
+						) : (
+							<label htmlFor="">Enter Delivery Address</label>
+						)}
 					</div>
 					{/* radios end */}
 
@@ -377,8 +424,8 @@ const Checkout = () => {
 								<label htmlFor="">Address</label>
 								<input
 									type="text"
-									name="address"
-									id="address"
+									name="newAddress"
+									id="newAddress"
 									className="border border-red-500"
 									value={newAddress}
 									onChange={(e) => setNewAddress(e.target.value)}
@@ -386,8 +433,8 @@ const Checkout = () => {
 								<label htmlFor="">Town/City</label>
 								<input
 									type="text"
-									name="city"
-									id="city"
+									name="newCity"
+									id="newCity"
 									className="border border-red-500"
 									value={newCity}
 									onChange={(e) => setNewCity(e.target.value)}
@@ -397,8 +444,8 @@ const Checkout = () => {
 								<label htmlFor="">State</label>
 								<input
 									type="text"
-									name="state"
-									id="state"
+									name="newState"
+									id="newState"
 									className="border border-red-500"
 									value={newState}
 									onChange={(e) => setNewState(e.target.value)}
@@ -406,8 +453,8 @@ const Checkout = () => {
 								<label htmlFor="">Zip Code</label>
 								<input
 									type="text"
-									name="zipCode"
-									id="zipCode"
+									name="newZipCode"
+									id="newZipCode"
 									className="border border-red-500"
 									value={newZipCode}
 									onChange={(e) => setNewZipCode(e.target.value)}
@@ -416,7 +463,7 @@ const Checkout = () => {
 						</div>
 					)}
 					{/* new address form end */}
-					{isChangedAddresses && (
+					{isChangedAddresses && isLoggedIn && (
 						<div className="flex">
 							<input
 								type="checkbox"
