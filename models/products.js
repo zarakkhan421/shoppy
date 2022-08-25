@@ -27,23 +27,28 @@ const productSchema = mongoose.Schema(
 			required: [true, "please provide stock number"],
 			default: 0,
 		},
-		reviews: [
-			{
-				user: {
-					type: mongoose.Schema.ObjectId,
-					ref: "Users",
-					required: true,
-				},
-				rating: {
-					type: Number,
-					required: [true, "please rate the product"],
-				},
-				comment: {
-					type: String,
-					required: true,
-				},
-			},
-		],
+		// reviews: [
+		// 	{
+		// 		user: {
+		// 			type: mongoose.Schema.ObjectId,
+		// 			ref: "Users",
+		// 			required: true,
+		// 		},
+		// 		order: {
+		// 			type: mongoose.Schema.ObjectId,
+		// 			ref: "Orders",
+		// 			required: true,
+		// 		},
+		// 		rating: {
+		// 			type: Number,
+		// 			required: [true, "please rate the product"],
+		// 		},
+		// 		comment: {
+		// 			type: String,
+		// 			required: true,
+		// 		},
+		// 	},
+		// ],
 		user: {
 			type: mongoose.Schema.ObjectId,
 			ref: "Users",

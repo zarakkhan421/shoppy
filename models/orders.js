@@ -21,7 +21,6 @@ const orderSchema = new mongoose.Schema(
 			email: {
 				type: String,
 				required: [true, "please provide an email"],
-				unique: true,
 				validate: [validator.isEmail, "should be email"],
 				trim: true,
 			},
@@ -73,6 +72,15 @@ const orderSchema = new mongoose.Schema(
 					default: 0,
 					required: [true, "please provide sale"],
 				},
+				orderStatus: {
+					type: String,
+					required: [true, "please provide order status"],
+					default: "processing",
+					enum: ["processing", "shipped", "delivered", "cancelled"],
+				},
+				shippedAt: Date,
+				deliveredAt: Date,
+				cancelledAt: Date,
 			},
 		],
 		user: {
@@ -84,20 +92,12 @@ const orderSchema = new mongoose.Schema(
 			type: Number,
 			required: [true, "please provide total order price"],
 		},
-		orderStatus: {
-			type: String,
-			required: [true, "please provide order status"],
-			default: "processing",
-			enum: ["processing", "shipped", "delivered", "cancelled"],
-		},
+
 		shippingCost: {
 			type: Number,
 			default: 0,
 			required: [true, "please provide shipping cost"],
 		},
-		shippedAt: Date,
-		deliveredAt: Date,
-		cancelledAt: Date,
 	},
 	{ timestamps: true }
 );

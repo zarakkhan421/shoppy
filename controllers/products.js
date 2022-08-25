@@ -123,3 +123,58 @@ exports.updateProduct = async (req, res) => {
 		failedResponse(res, error);
 	}
 };
+
+// exports.reviewProduct = async (req, res) => {
+// 	try {
+// 		const product = await Product.findById(req.params.id);
+// 		const reviewExist =
+// 			product.reviews.filter((review) => String(review.user) === req.user)
+// 				.length > 0;
+// 		if (reviewExist || product.reviews.length !== 0) {
+// 			return failedResponse(res, null, 400, "review already exists");
+// 		}
+// 		console.log(req.params);
+// 		const review = await Product.findByIdAndUpdate(
+// 			req.params.id,
+// 			{
+// 				$push: {
+// 					reviews: {
+// 						user: req.user,
+// 						product: req.params.product,
+// 						order: req.body.order,
+// 						rating: req.body.rating,
+// 						comment: req.body.comment,
+// 					},
+// 				},
+// 			},
+// 			{
+// 				new: true,
+// 			}
+// 		);
+// 		return successfulResponse(res, review);
+// 	} catch (error) {
+// 		console.log(error);
+// 	}
+// };
+
+// exports.getAllReviews = async (req, res) => {
+// 	try {
+// 		const products = await Product.find()
+// 			.populate("reviews.user")
+// 			.populate("reviews.order");
+// 		let reviews = products
+// 			.map((product) => ({
+// 				productName: product.name,
+// 				reviews: product.reviews,
+// 			}))
+// 			.map((review) => ({
+// 				name: review.productName,
+// 				review: review.reviews,
+// 			}))
+// 			.filter((review) => review.length !== 0)
+// 			.flat();
+// 		successfulResponse(res, { reviews });
+// 	} catch (error) {
+// 		failedResponse(res, error);
+// 	}
+// };

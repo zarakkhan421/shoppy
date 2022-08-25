@@ -3,25 +3,31 @@ const {
 	createOrder,
 	getOrder,
 	getMyOrders,
-	shippedOrder,
-	deliveredOrder,
-	cancelledOrder,
+	getAllOrders,
+	changeStatusToShipped,
+	changeStatusToDelivered,
+	changeStatusToCancelled,
+	getOrderItem,
 } = require("../controllers/orders");
 const { auth } = require("../middleware/auth");
 const { roles } = require("../middleware/roles");
 const router = express.Router();
 
-router.route("/mine").get(auth, getMyOrders);
-router.route("/").post(createOrder);
+router.route("/").get(auth, getMyOrders);
 router
-	.route("/:id/shipped")
-	.put(auth, roles(["admin", "editor"]), shippedOrder);
+	.route("/all")
+	.post(createOrder)
+	.get(auth, roles(["admin", "editor"]), getAllOrders);
 router
-	.route("/:id/delivered")
-	.put(auth, roles(["admin", "editor"]), deliveredOrder);
+	.route("/shipped/:id/:item/")
+	.put(auth, roles(["admin", "editor"]), changeStatusToShipped);
 router
-	.route("/:id/cancelled")
-	.put(auth, roles(["admin", "editor"]), cancelledOrder);
+	.route("/delivered/:id/:item/")
+	.put(auth, roles(["admin", "editor"]), changeStatusToDelivered);
+router
+	.route("/cancelled/:id/:item/")
+	.put(auth, roles(["admin", "editor"]), changeStatusToCancelled);
+
 router.route("/:id").get(auth, getOrder);
 
 module.exports = router;

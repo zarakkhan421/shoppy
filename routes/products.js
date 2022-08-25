@@ -14,6 +14,8 @@ const { auth } = require("../middleware/auth");
 const { roles } = require("../middleware/roles");
 
 router.route("/search/:search_term").get(getSearchedProducts);
+// router.route("/reviews").get(auth, getAllReviews);
+// router.route("/review/:id").put(auth, reviewProduct);
 router.route("/featured").get(getFeaturedProducts);
 router.route("/sale").get(getSaleProducts);
 router
