@@ -5,7 +5,9 @@ import orderSummary from "../utils/orderSummary";
 import { getIsLoggedIn, getUserId } from "../features/userSlice";
 import { useSelector } from "react-redux";
 import useAxios from "../hooks/useAxios";
+import { useNavigate } from "react-router-dom";
 const Checkout = () => {
+	const navigate = useNavigate();
 	const { getCart, resetCart } = useLocalStorage();
 	const [checkoutDetails, setCheckoutDetails] = useState({});
 	const [isChangedAddresses, setIsChangedAddresses] = useState(false);
@@ -179,6 +181,7 @@ const Checkout = () => {
 		try {
 			const response = await axiosInstance.post("/orders", order);
 			console.log(response);
+			navigate("/");
 			if (response.data.success) {
 				resetCart();
 			}

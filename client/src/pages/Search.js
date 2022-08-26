@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Product from "../components/common/Product";
 import useAxios from "../hooks/useAxios";
 
 const Search = () => {
@@ -11,14 +12,15 @@ const Search = () => {
 			const response = await axiosInstance.get(
 				`/products/search/${searchTerm}`
 			);
+			console.log(searchTerm);
+			console.log(searchedProducts);
 			setSearchedProducts(response.data.serverData.searchedProducts);
 		}
 	};
-	console.log(searchedProducts);
 	return (
 		<div>
 			<div>
-				<form action="" onSubmit={getSearchedProducts}>
+				<form onSubmit={getSearchedProducts}>
 					<label htmlFor="">Search</label>
 					<input
 						type="text"
@@ -30,9 +32,11 @@ const Search = () => {
 					<button type="submit">Search</button>
 				</form>
 			</div>
-			<div>
+			<div className="flex">
 				{searchedProducts.map((searchedProduct) => {
-					return <div key={searchedProduct._id}>{searchedProduct.name}</div>;
+					return (
+						<Product key={searchedProduct._id} product={searchedProduct} />
+					);
 				})}
 			</div>
 		</div>

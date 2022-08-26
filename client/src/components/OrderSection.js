@@ -12,7 +12,7 @@ const OrderSection = (props) => {
 			<div>{moment(order.createdAt).format("DD MMM, YYYY")}</div>
 			{order.orderItems.map((orderItem, i) => {
 				return (
-					<div className="flex flex-col mb-3">
+					<div key={orderItem._id} className="flex flex-col mb-3">
 						<div>Order Item {i + 1}</div>
 						<div className="flex">
 							<div>picture</div>

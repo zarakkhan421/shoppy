@@ -7,7 +7,7 @@ import { getAccessToken } from "../features/userSlice";
 const useAxiosPrivate = () => {
 	const accessToken = useSelector(getAccessToken);
 	const dispatch = useDispatch();
-
+	console.log("3333333333", accessToken);
 	const axiosPrivateInstance = axios.create({
 		baseURL: "http://localhost:5000/api",
 		headers: {
@@ -18,6 +18,7 @@ const useAxiosPrivate = () => {
 		console.log(accessToken);
 		req.headers.Authorization = `Bearer ${accessToken}`;
 		const decodedAccessToken = jwtDecode(accessToken);
+
 		const expireTime = decodedAccessToken.exp * 1000;
 		const date = Date.now();
 		if (expireTime < date) {

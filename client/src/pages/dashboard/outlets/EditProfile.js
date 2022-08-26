@@ -42,9 +42,9 @@ const EditProfile = () => {
 	useEffect(() => {
 		const getUserProfile = async () => {
 			try {
-				const response = await axiosPrivateInstance.get(`/user/${userId}`);
+				const response = await axiosPrivateInstance.get(`/user`);
 				console.log(response);
-				const user = response.data.serverData.user;
+				const user = response?.data.serverData.user;
 				setFormData({
 					firstName: user.firstName,
 					lastName: user.lastName,

@@ -30,6 +30,7 @@ const Login = () => {
 	const submitHandler = (e) => {
 		e.preventDefault();
 		dispatch(login(formData));
+		console.log("dispatch login");
 	};
 
 	return (

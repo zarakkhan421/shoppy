@@ -13,11 +13,9 @@ const { auth } = require("../middleware/auth");
 const { roles } = require("../middleware/roles");
 const router = express.Router();
 
-router.route("/").get(auth, getMyOrders);
-router
-	.route("/all")
-	.post(createOrder)
-	.get(auth, roles(["admin", "editor"]), getAllOrders);
+router.route("/").get(auth, getMyOrders).post(createOrder);
+router.route("/all").get(auth, roles(["admin", "editor"]), getAllOrders);
+
 router
 	.route("/shipped/:id/:item/")
 	.put(auth, roles(["admin", "editor"]), changeStatusToShipped);

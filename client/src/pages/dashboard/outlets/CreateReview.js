@@ -46,7 +46,7 @@ const CreateReview = () => {
 		};
 		try {
 			const response = await axiosPrivateInstance.post(
-				`/reviews/${orderItem.product}`,
+				`/reviews/${orderItem.product._id}`,
 				data
 			);
 			console.log(response);
@@ -62,10 +62,7 @@ const CreateReview = () => {
 				<div>picture</div>
 				<div>
 					<div>{orderItem.name}</div>
-					<div>Price: {orderItem.price}</div>
-					<div>
-						Delivered On: {moment(order.deliveredAt).format("DD MMM, YYYY")}
-					</div>
+					<div>Price: {orderItem.product?.price}</div>
 				</div>
 			</div>
 			<div>

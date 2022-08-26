@@ -4,6 +4,9 @@ const {
 	createReview,
 	getReviews,
 	getMyReviews,
+	getReview,
+	updateReview,
+	deleteReview,
 } = require("../controllers/reviews");
 const { auth } = require("../middleware/auth");
 const { roles } = require("../middleware/roles");
@@ -12,4 +15,9 @@ const { roles } = require("../middleware/roles");
 router.route("/:product").post(auth, createReview);
 router.route("/all").get(auth, roles(["admin"]), getReviews);
 router.route("/").get(auth, getMyReviews);
+router
+	.route("/:id")
+	.get(auth, getReview)
+	.put(auth, updateReview)
+	.delete(auth, deleteReview);
 module.exports = router;

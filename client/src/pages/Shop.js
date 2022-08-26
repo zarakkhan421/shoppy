@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
+import Product from "../components/common/Product";
 import useAxios from "../hooks/useAxios";
 
 let priceChanged = false;
@@ -86,16 +87,11 @@ const Shop = () => {
 			<div>
 				<h2> All Products </h2>
 				<div>{countProduct}</div>
-				{products.map((product) => {
-					return (
-						<div key={product._id}>
-							<div>name: {product.name}</div>
-							<div>price: {product.price}</div>
-							<div>ratings: {product.ratings}</div>
-							<Link to={`/products/${product._id}`}>single</Link>
-						</div>
-					);
-				})}
+				<div className="flex">
+					{products.map((product) => {
+						return <Product key={product._id} product={product} />;
+					})}
+				</div>
 			</div>
 		</div>
 	);

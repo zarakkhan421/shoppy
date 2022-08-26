@@ -24,10 +24,9 @@ exports.createOrder = async (req, res) => {
 
 exports.getOrder = async (req, res) => {
 	try {
-		const order = await Order.findById(req.params.id).populate(
-			"user",
-			"name email"
-		);
+		const order = await Order.findById(req.params.id)
+			.populate("user", "name email")
+			.populate("orderItems.product");
 		successfulResponse(res, { order });
 	} catch (error) {
 		failedResponse(res, error);

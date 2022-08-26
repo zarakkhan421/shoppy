@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import useAxios from "../../hooks/useAxios";
-import HomeSection from "./sections/HomeSection";
+import useAxios from "../hooks/useAxios";
+import HomeSection from "../components/HomeSection";
+import useAllowedContent from "../hooks/useAllowedContent";
 
 const Home = () => {
 	const axiosInstance = useAxios();
@@ -12,6 +13,8 @@ const Home = () => {
 	const [featuredCount, setFeaturedCount] = useState(0);
 	const [salesProducts, setSalesProducts] = useState([]);
 	const [salesCount, setSalesCount] = useState(0);
+
+	const { isAdmin, isEditorAdmin } = useAllowedContent();
 	useEffect(() => {
 		const getProducts = async () => {
 			try {
@@ -60,6 +63,7 @@ const Home = () => {
 				title="Sales Products"
 				count={salesCount}
 			/>
+			{isAdmin && "isadmin"} {isEditorAdmin && "isadmineditor"}
 		</div>
 	);
 };

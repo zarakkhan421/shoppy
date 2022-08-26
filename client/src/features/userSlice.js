@@ -8,6 +8,7 @@ const initialState = {
 	isLoading: false,
 	isSuccess: false,
 	error: {},
+	cart: [],
 };
 
 export const login = createAsyncThunk(
@@ -63,6 +64,9 @@ export const counterSlice = createSlice({
 		refreshAccessToken: (state, actions) => {
 			state.accessToken = actions.payload?.serverData.accessToken;
 		},
+		cart: (state, actions) => {
+			state.cart = actions?.payload;
+		},
 	},
 	extraReducers: (builder) => {
 		builder
@@ -75,6 +79,7 @@ export const counterSlice = createSlice({
 				state.isLoading = false;
 				state.isLoggedIn = true;
 				state.isSuccess = true;
+				state.error = {};
 			})
 			.addCase(login.rejected, (state, action) => {
 				state.error = action.payload;
@@ -90,12 +95,16 @@ export const counterSlice = createSlice({
 				state.isLoading = false;
 				state.isLoggedIn = true;
 				state.isSuccess = true;
+				state.error = {};
 			})
 			.addCase(register.rejected, (state, action) => {
 				state.error = action.payload;
 				state.isLoading = false;
 				state.isSuccess = false;
 			});
+		// .addCase(getCartFromRedux.fulfilled, (state, action) => {
+		// 	state.cart = action.payload;
+		// });
 	},
 });
 
@@ -107,7 +116,8 @@ export const getfirstName = (state) =>
 export const getlastName = (state) => state.auth.user.serverData?.user.lastName;
 export const getIsLoggedIn = (state) => state.auth.isLoggedIn;
 export const getIsLoading = (state) => state.auth.isLoading;
+export const getCart = (state) => state?.auth.cart;
 
-export const { reset, refreshAccessToken } = counterSlice.actions;
+export const { reset, refreshAccessToken, cart } = counterSlice.actions;
 
 export default counterSlice.reducer;

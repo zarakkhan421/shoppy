@@ -60,6 +60,7 @@ exports.getProducts = async (req, res) => {
 exports.getSearchedProducts = async (req, res) => {
 	try {
 		console.log("ererrerer");
+		console.log(req.params);
 		const searchedProducts = await Product.find(
 			{
 				$text: { $search: req.params.search_term },

@@ -13,7 +13,15 @@ const sendUserData = require("../utils/sendUserData");
 
 exports.register = async (req, res) => {
 	try {
-		const { firstName, lastName, email, password, confirmPassword } = req.body;
+		const {
+			firstName,
+			lastName,
+			email,
+			password,
+			confirmPassword,
+			phoneNumber,
+			addresses,
+		} = req.body;
 		const existingUser = await User.findOne({ email });
 		if (existingUser) {
 			return failedResponse(res, null, 406, "user already exist");
@@ -27,16 +35,20 @@ exports.register = async (req, res) => {
 			);
 		}
 		const salt = await bcrypt.genSalt(10);
+		console.log(req.body);
 		const hashedPassword = await bcrypt.hash(password, salt);
 		const userCreated = await User.create({
 			firstName,
 			lastName,
 			email,
 			password: hashedPassword,
+			phoneNumber,
+			addresses,
 		});
+		console.log("222");
 		const user = sendUserData(userCreated);
-		const accessToken = sendAccessToken(user.id);
-		const refreshToken = sendRefreshToken(user.id);
+		const accessToken = sendAccessToken(user._id);
+		const refreshToken = sendRefreshToken(user._id);
 		// refersh token to be added to user concerned as well
 		res.cookie("token", refreshToken, cookieOptions);
 		successfulResponse(res, { user, accessToken });
@@ -151,7 +163,18 @@ exports.getUser = async (req, res) => {
 		const user = await User.findById(req.params.id);
 		successfulResponse(res, { user });
 	} catch (error) {
-		failedResponse(res, null, 400, "failed to get user");
+		failedResponse(res, error, 400, "failed to get user");
+	}
+};
+
+exports.getMyProfile = async (req, res) => {
+	try {
+		console.log(req.user);
+		const user = await User.findById(req.user);
+		console.log(user);
+		successfulResponse(res, { user });
+	} catch (error) {
+		failedResponse(res, error);
 	}
 };
 

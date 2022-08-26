@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Product from "./common/Product";
 
 const HomeSection = (props) => {
 	const { title, products, count } = props;
@@ -10,13 +11,7 @@ const HomeSection = (props) => {
 				<span>{count}</span>
 				<div className="flex">
 					{products.slice(0, 5).map((product) => {
-						return (
-							<div className="m-4 border p-4 border-red-500" key={product._id}>
-								<div> {product.name}</div>
-								<div>{product.sale > 0 ? "on Sale" : ""}</div>
-								<Link to={`/products/${product._id}`}>single</Link>
-							</div>
-						);
+						return <Product key={product._id} product={product} />;
 					})}
 				</div>
 			</div>

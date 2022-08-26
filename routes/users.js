@@ -13,6 +13,7 @@ const {
 	getUser,
 	deleteUser,
 	getCheckoutDetailsById,
+	getMyProfile,
 } = require("../controllers/users");
 
 const router = express.Router();
@@ -29,9 +30,10 @@ router.route("/update-password").put(auth, updatePassword);
 router.route("/").put(auth, updateProfile);
 router.route("/update-role").put(auth, roles("admin"), updateRole);
 router.route("/all").get(auth, roles("admin", "editor"), getUsers);
+router.route("/:id").get(auth, roles("admin", "editor"), getUser);
 router
-	.route("/:id")
-	.get(auth, roles("admin", "editor"), getUser)
+	.route("/")
+	.get(auth, getMyProfile)
 	.delete(auth, roles("admin"), deleteUser);
 router.route("/checkout-details/:id").get(auth, getCheckoutDetailsById);
 
