@@ -6,6 +6,7 @@ const sendUserData = (user) => {
 		email: user.email,
 		role: user.role,
 		phoneNumber: user.phoneNumber,
+		image: user.image,
 	};
 	return userData;
 };

@@ -25,7 +25,7 @@ export const login = createAsyncThunk(
 			console.log("response login", response);
 			return response.data;
 		} catch (error) {
-			return thunkAPI.rejectWithValue(error);
+			return thunkAPI.rejectWithValue(error.response.data);
 		}
 	}
 );
@@ -44,7 +44,7 @@ export const register = createAsyncThunk(
 			console.log("response register", response);
 			return response.data;
 		} catch (error) {
-			return thunkAPI.rejectWithValue(error);
+			return thunkAPI.rejectWithValue(error.response.data);
 		}
 	}
 );
@@ -82,6 +82,7 @@ export const counterSlice = createSlice({
 				state.error = {};
 			})
 			.addCase(login.rejected, (state, action) => {
+				state.user = {};
 				state.error = action.payload;
 				state.isLoading = false;
 				state.isSuccess = false;
@@ -91,29 +92,28 @@ export const counterSlice = createSlice({
 			})
 			.addCase(register.fulfilled, (state, action) => {
 				state.user = action.payload;
-				state.accessToken = action.payload.serverData?.accessToken;
+				state.accessToken = action.payload?.serverData?.accessToken;
 				state.isLoading = false;
 				state.isLoggedIn = true;
 				state.isSuccess = true;
 				state.error = {};
 			})
 			.addCase(register.rejected, (state, action) => {
+				state.user = {};
 				state.error = action.payload;
 				state.isLoading = false;
 				state.isSuccess = false;
 			});
-		// .addCase(getCartFromRedux.fulfilled, (state, action) => {
-		// 	state.cart = action.payload;
-		// });
 	},
 });
 
 export const getAccessToken = (state) => state.auth.accessToken;
-export const getUserId = (state) => state.auth.user.serverData?.user._id;
-export const getUserRole = (state) => state.auth.user.serverData?.user.role;
+export const getUserId = (state) => state.auth.user?.serverData?.user._id;
+export const getUserRole = (state) => state.auth.user?.serverData?.user.role;
 export const getfirstName = (state) =>
 	state.auth.user.serverData?.user.firstName;
-export const getlastName = (state) => state.auth.user.serverData?.user.lastName;
+export const getlastName = (state) =>
+	state.auth.user?.serverData?.user.lastName;
 export const getIsLoggedIn = (state) => state.auth.isLoggedIn;
 export const getIsLoading = (state) => state.auth.isLoading;
 export const getCart = (state) => state?.auth.cart;

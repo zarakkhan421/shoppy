@@ -69,6 +69,16 @@ const userSchema = mongoose.Schema(
 				},
 			},
 		},
+		image: {
+			id: {
+				type: String,
+				required: [true, "please provide an image id"],
+			},
+			url: {
+				type: String,
+				required: [true, "please provide an image url"],
+			},
+		},
 		resetPasswordToken: String,
 		resetPasswordExpire: Date,
 	},

@@ -48,6 +48,16 @@ const productSchema = mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		image: {
+			id: {
+				type: String,
+				required: [true, "please provide an image id"],
+			},
+			url: {
+				type: String,
+				required: [true, "please provide an image url"],
+			},
+		},
 	},
 	{ timestamps: true }
 );

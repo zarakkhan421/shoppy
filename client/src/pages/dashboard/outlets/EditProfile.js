@@ -1,12 +1,17 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import RenderImage from "../../../components/common/RenderImage";
 import { getUserId } from "../../../features/userSlice";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 
 const EditProfile = () => {
 	const axiosPrivateInstance = useAxiosPrivate();
 	const userId = useSelector(getUserId);
+	// image
+	const [selectedImage, setSelectedImage] = useState("");
+	const [imageBase64, setImageBase64] = useState("");
+
 	const [formData, setFormData] = useState({
 		firstName: "",
 		lastName: "",
@@ -32,6 +37,7 @@ const EditProfile = () => {
 		shippingState,
 		shippingCity,
 		shippingZipCode,
+		image,
 	} = formData;
 	const onChange = (e) => {
 		setFormData((prevState) => ({
@@ -57,6 +63,7 @@ const EditProfile = () => {
 					shippingState: user.addresses.shippingAddress.state,
 					shippingCity: user.addresses.shippingAddress.city,
 					shippingZipCode: user.addresses.shippingAddress.zipCode,
+					image: user.image,
 				});
 				console.log(formData);
 			} catch (error) {
@@ -85,6 +92,7 @@ const EditProfile = () => {
 					zipCode: homeZipCode,
 				},
 			},
+			image: imageBase64,
 		};
 		try {
 			const response = await axiosPrivateInstance.put("/user", data);
@@ -92,6 +100,15 @@ const EditProfile = () => {
 		} catch (error) {
 			console.log(error);
 		}
+	};
+
+	const handleImage = (e) => {
+		setSelectedImage(e.target.value);
+		const reader = new FileReader();
+		reader.readAsDataURL(e.target.files[0]);
+		reader.onloadend = () => {
+			setImageBase64(reader.result);
+		};
 	};
 	return (
 		<div>
@@ -205,6 +222,38 @@ const EditProfile = () => {
 						className="border border-red-300"
 						value={shippingZipCode}
 						onChange={onChange}
+					/>
+				</div>
+				<div>
+					{/* {image === undefined && imageBase64.length === 0 && (
+						<img
+							alt="avatar"
+							src="../../../assets/images/avatar.png"
+							style={{ width: "250px", height: "auto" }}
+						/>
+					)}
+					{imageBase64.length > 0 ? (
+						<img
+							src={imageBase64}
+							alt="avatar"
+							style={{ width: "250px", height: "auto" }}
+						/>
+					) : (
+						<img
+							src={image?.url}
+							alt="avatar"
+							style={{ width: "250px", height: "auto" }}
+						/>
+					)} */}
+					<RenderImage image={image} imageBase64={imageBase64} />
+				</div>
+				<div>
+					<input
+						type="file"
+						name="image"
+						id="image"
+						value={selectedImage}
+						onChange={handleImage}
 					/>
 				</div>
 				<button type="submit">Update Profile</button>

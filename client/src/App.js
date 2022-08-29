@@ -1,6 +1,6 @@
 import Nav from "./layouts/NavBar";
 import Home from "./pages/Home";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Dashboard from "./pages/dashboard/Dashboard";
@@ -22,7 +22,10 @@ import Reviews from "./pages/dashboard/outlets/Reviews";
 import MyReviews from "./pages/dashboard/outlets/MyReviews";
 import CreateReview from "./pages/dashboard/outlets/CreateReview";
 import EditReview from "./pages/dashboard/outlets/EditReview";
-
+import useAxiosPrivate from "./hooks/useAxiosPrivate";
+import { useDispatch } from "react-redux";
+import { reset } from "./features/userSlice";
+import Logout from "./pages/auth/Logout";
 function App() {
 	return (
 		<div>
@@ -126,7 +129,7 @@ function App() {
 					<Route path="/login" element={<Login />} />
 					<Route path="/register" element={<Register />} />
 					<Route path="/shop" element={<Shop />} />
-
+					<Route path="logout" element={<Logout />} />
 					<Route exact path="/" element={<Home />} />
 				</Routes>
 			</div>

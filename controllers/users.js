@@ -10,6 +10,7 @@ const { verifyRefreshToken } = require("../utils/verifyRefreshToken");
 const crypto = require("crypto");
 const { sendMail } = require("../utils/sendMail");
 const sendUserData = require("../utils/sendUserData");
+const { cloudinary, uploadImage, updateImage } = require("../utils/cloudinary");
 
 exports.register = async (req, res) => {
 	try {
@@ -21,6 +22,7 @@ exports.register = async (req, res) => {
 			confirmPassword,
 			phoneNumber,
 			addresses,
+			image,
 		} = req.body;
 		const existingUser = await User.findOne({ email });
 		if (existingUser) {
@@ -35,8 +37,11 @@ exports.register = async (req, res) => {
 			);
 		}
 		const salt = await bcrypt.genSalt(10);
-		console.log(req.body);
 		const hashedPassword = await bcrypt.hash(password, salt);
+
+		// upload image
+		const cloudinaryResponse = await uploadImage(image);
+
 		const userCreated = await User.create({
 			firstName,
 			lastName,
@@ -44,8 +49,12 @@ exports.register = async (req, res) => {
 			password: hashedPassword,
 			phoneNumber,
 			addresses,
+			image: {
+				id: cloudinaryResponse.public_id,
+				url: cloudinaryResponse.secure_url,
+			},
 		});
-		console.log("222");
+
 		const user = sendUserData(userCreated);
 		const accessToken = sendAccessToken(user._id);
 		const refreshToken = sendRefreshToken(user._id);
@@ -66,6 +75,7 @@ exports.login = async (req, res) => {
 		if (!foundUser) {
 			return failedResponse(res, null, 403, "user not found");
 		}
+		console.log("fdd");
 		const matchUser = await bcrypt.compare(password, foundUser.password);
 		if (matchUser) {
 			const accessToken = sendAccessToken(foundUser.id);
@@ -74,10 +84,11 @@ exports.login = async (req, res) => {
 			// refersh token to be added to user concerned as well
 			res.cookie("token", refreshToken, cookieOptions);
 
-			// foundUser should be removed in production
 			const user = sendUserData(foundUser);
 			console.log(user);
-			successfulResponse(res, { user, accessToken });
+			return successfulResponse(res, { user, accessToken });
+		} else {
+			return failedResponse(res, {}, 400, "incorrect credentials");
 		}
 	} catch (error) {
 		failedResponse(res, error);
@@ -124,13 +135,21 @@ exports.updatePassword = async (req, res) => {
 exports.updateProfile = async (req, res) => {
 	try {
 		// destructure each value from body and not update all body by its self as it may update passowrd accidentaly with has separate route and controller
-		const { firstName, lastName, phoneNumber, addresses } = req.body;
+		const { firstName, lastName, phoneNumber, addresses, image } = req.body;
+
+		const onDbExists = await User.findById(req.user);
+
+		const { cloudinaryResponse, imageResponse } = await updateImage(
+			image,
+			onDbExists
+		);
 		const user = await User.findByIdAndUpdate(
 			req.user,
-			{ firstName, lastName, phoneNumber, addresses },
+			{ firstName, lastName, phoneNumber, addresses, image: imageResponse },
 			{ new: true }
 		);
-		successfulResponse(res, { user }, 201, "user updated");
+
+		successfulResponse(res, { user, cloudinaryResponse }, 201, "user updated");
 	} catch (error) {
 		failedResponse(res, error);
 	}
@@ -216,6 +235,7 @@ exports.refreshAccessToken = async (req, res) => {
 };
 
 exports.logout = async (req, res) => {
+	console.log("eeee");
 	if (!req.cookies.token) {
 		return successfulResponse(res, null);
 	}

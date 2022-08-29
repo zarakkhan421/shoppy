@@ -7,5 +7,6 @@ svg.star-svg {
 @layer base {
 	html {
 		font-family: "Inter", sans-serif;
+		color: #8c8c8c;
 	}
 }
