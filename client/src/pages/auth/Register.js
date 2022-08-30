@@ -13,8 +13,6 @@ import validate from "../../utils/validate";
 const Register = () => {
 	const userId = useSelector(getUserId);
 	const userRole = useSelector(getUserRole);
-	const getStatefirstName = useSelector(getfirstName);
-	const getStatelastName = useSelector(getlastName);
 	const isLoading = useSelector(getIsLoading);
 	//states
 	const [provideAdresses, setProvideAddresses] = useState(false);
@@ -165,11 +163,11 @@ const Register = () => {
 	return (
 		<section>
 			<form onSubmit={submitHandler}>
-				<div className="grid grid-cols-1 lg:grid-cols-2 gap-x-5 place-items-center">
+				<div className="grid grid-cols-2 gap-x-5 place-items-center">
 					<div className="col-span-2 text-4xl font-bold my-2 w-full">
 						Register
 					</div>
-					<div className="flex flex-col col-span-2 lg:col-span-1 w-full">
+					<div className="flex flex-col col-span-2 lg:col-span-1 w-full mb-3">
 						<label htmlFor="" className="text-xl">
 							First Name
 						</label>
@@ -191,7 +189,7 @@ const Register = () => {
 							);
 						})}
 					</div>
-					<div className="flex flex-col col-span-2 lg:col-span-1 w-full">
+					<div className="flex flex-col col-span-2 lg:col-span-1 w-full mb-3">
 						<label htmlFor="" className="text-xl">
 							Last Name
 						</label>
@@ -213,7 +211,7 @@ const Register = () => {
 							);
 						})}
 					</div>
-					<div className="flex flex-col col-span-2 lg:col-span-1 w-full">
+					<div className="flex flex-col col-span-2 lg:col-span-1 w-full mb-3">
 						<label htmlFor="" className="text-xl">
 							Phone Number
 						</label>
@@ -235,7 +233,7 @@ const Register = () => {
 							);
 						})}
 					</div>
-					<div className="flex flex-col col-span-2 lg:col-span-1 w-full">
+					<div className="flex flex-col col-span-2 lg:col-span-1 w-full mb-3">
 						<label htmlFor="" className="text-xl">
 							Email
 						</label>
@@ -257,7 +255,7 @@ const Register = () => {
 							);
 						})}
 					</div>
-					<div className="flex flex-col col-span-2 lg:col-span-1 w-full">
+					<div className="flex flex-col col-span-2 lg:col-span-1 w-full mb-3">
 						<label htmlFor="" className="text-xl">
 							Password
 						</label>
@@ -279,7 +277,7 @@ const Register = () => {
 							);
 						})}
 					</div>
-					<div className="flex flex-col col-span-2 lg:col-span-1 w-full">
+					<div className="flex flex-col col-span-2 lg:col-span-1 w-full mb-3">
 						<label htmlFor="" className="text-xl">
 							Confirm Password
 						</label>
@@ -453,15 +451,6 @@ const Register = () => {
 					</div>
 				</div>
 			</form>
-
-			<span>{userId ? userId : ""}</span>
-			<span>
-				{getStatefirstName && getStatelastName
-					? getStatefirstName + " " + getStatelastName
-					: ""}
-			</span>
-			<span>{userRole ? userRole : ""}</span>
-			<span>{isLoading && "isLoading"}</span>
 		</section>
 	);
 };

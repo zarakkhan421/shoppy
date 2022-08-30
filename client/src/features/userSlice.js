@@ -110,13 +110,14 @@ export const counterSlice = createSlice({
 export const getAccessToken = (state) => state.auth.accessToken;
 export const getUserId = (state) => state.auth.user?.serverData?.user._id;
 export const getUserRole = (state) => state.auth.user?.serverData?.user.role;
-export const getfirstName = (state) =>
+export const getFirstName = (state) =>
 	state.auth.user.serverData?.user.firstName;
-export const getlastName = (state) =>
+export const getLastName = (state) =>
 	state.auth.user?.serverData?.user.lastName;
 export const getIsLoggedIn = (state) => state.auth.isLoggedIn;
 export const getIsLoading = (state) => state.auth.isLoading;
 export const getCart = (state) => state?.auth.cart;
+export const getAvatar = (state) => state.auth.user?.serverData?.user.image.url;
 
 export const { reset, refreshAccessToken, cart } = counterSlice.actions;
 

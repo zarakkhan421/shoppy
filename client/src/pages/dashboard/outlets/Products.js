@@ -41,18 +41,19 @@ const Products = () => {
 		}
 	};
 	return (
-		<>
-			<div>{productCount}</div>
+		<div>
+			<h2 className="text-4xl font-bold my-2 w-full">Products</h2>
 			<table className="table-fixed border-collapse w-full border border-orange">
 				{/* <Outlet /> */}
 				<thead className="">
-					<tr>
-						<th className="border border-orange-500">Name</th>
-						<th className="border border-orange-500">Stock</th>
-						<th className="border border-orange-500">Price</th>
-						<th className="border border-orange-500">Featured</th>
-						<th className="border border-orange-500">Published</th>
-						<th className="border border-orange-500">Actions</th>
+					<tr className="bg-primary">
+						<th className="border text-white font-semibold">Name</th>
+						<th className="border text-white font-semibold">Image</th>
+						<th className="border text-white font-semibold">Stock</th>
+						<th className="border text-white font-semibold">Price</th>
+						<th className="border text-white font-semibold">Featured</th>
+						<th className="border text-white font-semibold">Published</th>
+						<th className="border text-white font-semibold">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -61,22 +62,17 @@ const Products = () => {
 							return (
 								<tr key={product._id}>
 									<>
-										<td className="border border-orange-500 text-center">
-											{product.name}
-										</td>
-										<td className="border border-orange-500 text-center">
-											{product.stock}
-										</td>
-										<td className="border border-orange-500 text-center">
-											{product.price}
-										</td>
-										<td className="border border-orange-500 text-center">
+										<td className="border text-center">{product.name}</td>
+										<td className="border text-center">image</td>
+										<td className="border text-center">{product.stock}</td>
+										<td className="border text-center">{product.price}</td>
+										<td className="border text-center">
 											{product.featured ? "True" : "False"}
 										</td>
-										<td className="border border-orange-500 text-center">
+										<td className="border text-center">
 											{product.published ? "True" : "False"}
 										</td>
-										<td className="border border-orange-500 text-center">
+										<td className="border text-center">
 											<Link to={`edit/${product._id}`}>Edit</Link>
 											<form onSubmit={deleteProduct}>
 												<input
@@ -93,7 +89,7 @@ const Products = () => {
 						})}
 				</tbody>
 			</table>
-		</>
+		</div>
 	);
 };
 

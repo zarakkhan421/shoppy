@@ -12,8 +12,6 @@ import validate from "../../utils/validate";
 const Login = () => {
 	const userId = useSelector(getUserId);
 	const userRole = useSelector(getUserRole);
-	const firstName = useSelector(getfirstName);
-	const lastName = useSelector(getlastName);
 	const isLoading = useSelector(getIsLoading);
 	const [formData, setFormData] = useState({
 		email: "",
@@ -63,7 +61,7 @@ const Login = () => {
 			<form onSubmit={submitHandler}>
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-x-5 place-items-center">
 					<div className="col-span-2 text-4xl font-bold my-2 w-full">Login</div>
-					<div className="flex flex-col col-span-2 lg:col-span-1 w-full">
+					<div className="flex flex-col col-span-2 lg:col-span-1 w-full mb-3">
 						<label htmlFor="" className="text-xl">
 							Email
 						</label>
@@ -85,7 +83,7 @@ const Login = () => {
 							);
 						})}
 					</div>
-					<div className="flex flex-col col-span-2 lg:col-span-1 w-full">
+					<div className="flex flex-col col-span-2 lg:col-span-1 w-full mb-3">
 						<label htmlFor="" className="text-xl">
 							Password
 						</label>
@@ -117,10 +115,6 @@ const Login = () => {
 					</div>
 				</div>
 			</form>
-			<span>{firstName && lastName ? firstName + " " + lastName : ""}</span>
-			<span>{userRole ? userRole : ""}</span>
-			<span>{isLoading && "isLoading"}</span>
-			{userId ? <span>{userId}</span> : "noid"}
 		</section>
 	);
 };

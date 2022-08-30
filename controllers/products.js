@@ -118,7 +118,9 @@ exports.deleteProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
 	try {
-		const product = await Product.findByIdAndUpdate(req.params.id, req.body);
+		const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+			new: true,
+		});
 		successfulResponse(res, { product });
 	} catch (error) {
 		failedResponse(res, error);

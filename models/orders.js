@@ -47,42 +47,42 @@ const orderSchema = new mongoose.Schema(
 				required: [true, "please provide a zip code"],
 			},
 		},
-		orderItems: [
-			{
-				name: {
-					type: String,
-					required: [true, "please provide product name"],
-				},
-				price: {
-					type: Number,
-					required: [true, "please provide product price"],
-				},
-				quantity: {
-					type: Number,
-					required: [true, "please provide quantity of order items"],
-					default: 1,
-				},
-				product: {
-					type: mongoose.Schema.ObjectId,
-					ref: "Products",
-					required: [true, "please provide product reference"],
-				},
-				sale: {
-					type: Number,
-					default: 0,
-					required: [true, "please provide sale"],
-				},
-				orderStatus: {
-					type: String,
-					required: [true, "please provide order status"],
-					default: "processing",
-					enum: ["processing", "shipped", "delivered", "cancelled"],
-				},
-				shippedAt: Date,
-				deliveredAt: Date,
-				cancelledAt: Date,
-			},
-		],
+		// orderItems: [
+		// 	{
+		// 		name: {
+		// 			type: String,
+		// 			required: [true, "please provide product name"],
+		// 		},
+		// 		price: {
+		// 			type: Number,
+		// 			required: [true, "please provide product price"],
+		// 		},
+		// 		quantity: {
+		// 			type: Number,
+		// 			required: [true, "please provide quantity of order items"],
+		// 			default: 1,
+		// 		},
+		// 		product: {
+		// 			type: mongoose.Schema.ObjectId,
+		// 			ref: "Products",
+		// 			required: [true, "please provide product reference"],
+		// 		},
+		// 		sale: {
+		// 			type: Number,
+		// 			default: 0,
+		// 			required: [true, "please provide sale"],
+		// 		},
+		// 		orderStatus: {
+		// 			type: String,
+		// 			required: [true, "please provide order status"],
+		// 			default: "processing",
+		// 			enum: ["processing", "shipped", "delivered", "cancelled"],
+		// 		},
+		// 		shippedAt: Date,
+		// 		deliveredAt: Date,
+		// 		cancelledAt: Date,
+		// 	},
+		// ],
 		user: {
 			type: mongoose.Schema.ObjectId,
 			ref: "Users",

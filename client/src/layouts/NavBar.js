@@ -16,7 +16,7 @@ const NavBar = () => {
 	return (
 		<nav>
 			{/* below :lg should have different navbar */}
-			<div className=" container mx-auto nav-bar hidden lg:flex  justify-between items-center w-full h-10 ">
+			<div className=" container mx-auto nav-bar hidden lg:flex  justify-between items-center w-full h-[4.5vh] ">
 				<div className="flex w-1/4 xl:w-2/5">
 					<Link to="/" className="font-extrabold text-lg text-gray-1">
 						Shoppy
@@ -34,22 +34,32 @@ const NavBar = () => {
 							Dashboard
 						</Link>
 					</div>
-					<div className="flex w-5/12 2xl:w-6/12 justify-around">
+					<div
+						className={`flex w-5/12 2xl:w-6/12 justify-around ${
+							isLoggedIn && "2xl:w-3/12"
+						}`}
+					>
 						<Link to="search" className="flex items-center text-gray-1">
 							<FaSearch className="w-5 h-5 text-gray-1" />
 						</Link>
-						<Link to="register" className="flex items-center text-gray-1">
-							<CgProfile className="w-5 h-5 mr-2 text-gray-1" />
-							<div className="font-regular text-gray-1"> Register</div>
-						</Link>
-						<Link to="logout" className="flex items-center text-gray-1">
-							<FiLogOut className="w-5 h-5 mr-2 text-gray-1" />
-							<div className="font-regular text-gray-1"> Logout</div>
-						</Link>
-						<Link to="login" className="flex items-center text-gray-1">
-							<FiLogIn className="w-5 h-5 mr-2 text-gray-1" />
-							<div className="font-regular text-gray-1">Login</div>
-						</Link>
+						{!isLoggedIn && (
+							<Link to="register" className="flex items-center text-gray-1">
+								<CgProfile className="w-5 h-5 mr-2 text-gray-1" />
+								<div className="font-regular text-gray-1"> Register</div>
+							</Link>
+						)}
+						{isLoggedIn && (
+							<Link to="logout" className="flex items-center text-gray-1">
+								<FiLogOut className="w-5 h-5 mr-2 text-gray-1" />
+								<div className="font-regular text-gray-1"> Logout</div>
+							</Link>
+						)}
+						{!isLoggedIn && (
+							<Link to="login" className="flex items-center text-gray-1">
+								<FiLogIn className="w-5 h-5 mr-2 text-gray-1" />
+								<div className="font-regular text-gray-1">Login</div>
+							</Link>
+						)}
 						<Link to="cart" className="flex items-center relative text-gray-1">
 							<FaShoppingCart className="w-5 h-5 text-gray-1" />
 							{cart.length > 0 && (
@@ -117,13 +127,15 @@ const NavBar = () => {
 						>
 							Shop
 						</Link>
-						<Link
-							to="dashboard"
-							onClick={() => setIsOpen(false)}
-							className="font-bold text-gray-1"
-						>
-							Dashboard
-						</Link>
+						{isLoggedIn && (
+							<Link
+								to="dashboard"
+								onClick={() => setIsOpen(false)}
+								className="font-bold text-gray-1"
+							>
+								Dashboard
+							</Link>
+						)}
 					</div>
 					<div className="flex flex-col justify-between items-center space-y-2 pb-2 bg-white">
 						<Link
@@ -133,30 +145,36 @@ const NavBar = () => {
 						>
 							<FaSearch className="w-5 h-5 text-gray-1" />
 						</Link>
-						<Link
-							to="register"
-							onClick={() => setIsOpen(false)}
-							className="flex items-center text-gray-1"
-						>
-							<CgProfile className="w-5 h-5 mr-2 text-gray-1" />
-							<div className="font-regular text-gray-1"> Register</div>
-						</Link>
-						<Link
-							to="logout"
-							onClick={() => setIsOpen(false)}
-							className="flex items-center"
-						>
-							<FiLogOut className="w-5 h-5 mr-2 text-gray-1" />
-							<div className="font-regular text-gray-1"> Logout</div>
-						</Link>
-						<Link
-							to="login"
-							onClick={() => setIsOpen(false)}
-							className="flex items-center"
-						>
-							<FiLogIn className="w-5 h-5 mr-2 text-gray-1" />
-							<div className="font-regular text-gray-1">Login</div>
-						</Link>
+						{!isLoggedIn && (
+							<Link
+								to="register"
+								onClick={() => setIsOpen(false)}
+								className="flex items-center text-gray-1"
+							>
+								<CgProfile className="w-5 h-5 mr-2 text-gray-1" />
+								<div className="font-regular text-gray-1"> Register</div>
+							</Link>
+						)}
+						{isLoggedIn && (
+							<Link
+								to="logout"
+								onClick={() => setIsOpen(false)}
+								className="flex items-center"
+							>
+								<FiLogOut className="w-5 h-5 mr-2 text-gray-1" />
+								<div className="font-regular text-gray-1"> Logout</div>
+							</Link>
+						)}
+						{!isLoggedIn && (
+							<Link
+								to="login"
+								onClick={() => setIsOpen(false)}
+								className="flex items-center"
+							>
+								<FiLogIn className="w-5 h-5 mr-2 text-gray-1" />
+								<div className="font-regular text-gray-1">Login</div>
+							</Link>
+						)}
 					</div>
 				</div>
 			</div>

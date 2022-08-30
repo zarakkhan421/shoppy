@@ -7,15 +7,19 @@ const validate = (dataToValidate) => {
 		// validate string
 		if (data.validate.includes("string") && !data.validate.includes("match")) {
 			if (data.validate.includes("required")) {
-				if (data.value.length === 0) {
+				if (data.value?.length === 0 || data.value === undefined) {
 					dataErrors.push(data.name + " is required");
 				}
 			}
-			if (typeof data.value !== "string" && data.value.length !== 0) {
+			if (
+				typeof data.value !== "string" &&
+				data.value?.length !== 0 &&
+				data.value !== undefined
+			) {
 				dataErrors.push(data.name + " is not a string");
 			}
 			// validate email
-			if (data.validate.includes("email") && data.value.length !== 0) {
+			if (data.validate.includes("email") && data.value?.length !== 0) {
 				if (
 					!/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
 						data.value
@@ -30,7 +34,7 @@ const validate = (dataToValidate) => {
 			if (minIndex > 0) {
 				let min = data.validate[minIndex];
 				let minValue = min.split(":")[1];
-				if (data.value.length < Number(minValue) && data.value.length !== 0) {
+				if (data.value?.length < Number(minValue) && data.value?.length !== 0) {
 					dataErrors.push(data.name + " should be minimum of " + minValue);
 				}
 			}
@@ -39,7 +43,7 @@ const validate = (dataToValidate) => {
 			if (maxIndex > 0) {
 				let max = data.validate[maxIndex];
 				let maxValue = max.split(":")[1];
-				if (data.value.length > Number(maxValue) && data.value.length !== 0) {
+				if (data.value?.length > Number(maxValue) && data.value?.length !== 0) {
 					dataErrors.push(data.name + " should be maximum of " + maxValue);
 				}
 			}
