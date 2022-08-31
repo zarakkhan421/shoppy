@@ -461,10 +461,10 @@ const EditProfile = () => {
 							);
 						})}
 					</div>
-					<div className="flex flex-col col-span-2 lg:col-span-1 w-full mb-3">
+					<div className="flex flex-col col-span-2 w-full mb-3">
 						<RenderImage image={image} imageBase64={imageBase64} />
 					</div>
-					<div className="flex flex-col col-span-2 lg:col-span-1 w-full mb-3">
+					<div className="flex flex-col col-span-2 w-full mb-3">
 						<input
 							type="file"
 							name="image"

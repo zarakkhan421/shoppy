@@ -5,13 +5,14 @@ import avatar2 from "../../assets/images/avatar2.png";
 const RenderImage = (props) => {
 	const { image, imageBase64 } = props;
 	let imageSrc;
+
 	if (imageBase64.length > 0) {
 		imageSrc = imageBase64;
-	} else if (image?.url.length > 0 && imageBase64.length === 0) {
-		imageSrc = image.url;
-	} else if (image?.url.length === 0 && imageBase64.length === 0) {
-		imageSrc = avatar;
 	} else if (image === undefined) {
+		imageSrc = avatar;
+	} else if (image?.url?.length > 0 && imageBase64.length === 0) {
+		imageSrc = image.url;
+	} else if (image?.url?.length === 0 && imageBase64.length === 0) {
 		imageSrc = avatar;
 	}
 

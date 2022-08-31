@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import RenderImage from "../../../components/common/RenderImage";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import validate from "../../../utils/validate";
 const EditProduct = () => {
@@ -10,7 +11,10 @@ const EditProduct = () => {
 	const [sale, setSale] = useState();
 	const [published, setPublished] = useState(false);
 	const [featured, setFeatured] = useState(false);
-
+	const [image, setImage] = useState("");
+	// image
+	const [selectedImage, setSelectedImage] = useState("");
+	const [imageBase64, setImageBase64] = useState("");
 	const params = useParams();
 	console.log("params", params);
 	console.log("edit");
@@ -41,6 +45,7 @@ const EditProduct = () => {
 				setSale(product.sale);
 				setPublished(product.published);
 				setFeatured(product.featured);
+				setImage(product.image);
 			} catch (error) {
 				console.log(error);
 			}
@@ -60,22 +65,22 @@ const EditProduct = () => {
 			{
 				name: "Desciption",
 				value: description,
-				validate: ["required", "string", "min:3"],
+				validate: ["required", "string", "min:10", "max:1000"],
 			},
 			{
 				name: "Price",
 				value: price,
-				validate: ["required", "number"],
+				validate: ["required", "number", "min:0"],
 			},
 			{
 				name: "Stock",
 				value: stock,
-				validate: ["required", "number"],
+				validate: ["required", "number", "min:1"],
 			},
 			{
 				name: "Sale",
 				value: sale,
-				validate: ["required", "number"],
+				validate: ["required", "number", "min:0"],
 			},
 		];
 		const validateErrors = validate(dataToValidate);
@@ -97,10 +102,18 @@ const EditProduct = () => {
 			sale,
 			published,
 			featured,
+			image: imageBase64,
 		});
 		console.log(response);
 	};
-
+	const handleImage = (e) => {
+		setSelectedImage(e.target.value);
+		const reader = new FileReader();
+		reader.readAsDataURL(e.target.files[0]);
+		reader.onloadend = () => {
+			setImageBase64(reader.result);
+		};
+	};
 	return (
 		<section>
 			<form onSubmit={submitHandler}>
@@ -245,6 +258,18 @@ const EditProduct = () => {
 								</span>
 							);
 						})}
+					</div>
+					<div className="flex flex-col col-span-2 w-full mb-3">
+						<RenderImage image={image} imageBase64={imageBase64} />
+					</div>
+					<div className="flex flex-col col-span-2 w-full mb-3">
+						<input
+							type="file"
+							name="image"
+							id="image"
+							value={selectedImage}
+							onChange={handleImage}
+						/>
 					</div>
 					<div className="col-span-3 w-full">
 						<button

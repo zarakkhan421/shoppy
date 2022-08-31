@@ -63,7 +63,13 @@ const Products = () => {
 								<tr key={product._id}>
 									<>
 										<td className="border text-center">{product.name}</td>
-										<td className="border text-center">image</td>
+										<td className="border text-center flex justify-center">
+											<img
+												src={product.image.url}
+												className="h-10 w-10 p-auto text-center"
+												alt=""
+											/>
+										</td>
 										<td className="border text-center">{product.stock}</td>
 										<td className="border text-center">{product.price}</td>
 										<td className="border text-center">
@@ -73,15 +79,19 @@ const Products = () => {
 											{product.published ? "True" : "False"}
 										</td>
 										<td className="border text-center">
-											<Link to={`edit/${product._id}`}>Edit</Link>
-											<form onSubmit={deleteProduct}>
-												<input
-													type="hidden"
-													name="productId"
-													value={product._id}
-												/>
-												<button type="submit">Delete</button>
-											</form>
+											<div className="flex justify-center">
+												<Link to={`edit/${product._id}`} className="mx-1">
+													Edit
+												</Link>
+												<form onSubmit={deleteProduct} className=" mx-1">
+													<input
+														type="hidden"
+														name="productId"
+														value={product._id}
+													/>
+													<button type="submit">Delete</button>
+												</form>
+											</div>
 										</td>
 									</>
 								</tr>

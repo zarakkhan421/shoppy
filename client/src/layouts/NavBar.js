@@ -16,7 +16,7 @@ const NavBar = () => {
 	return (
 		<nav>
 			{/* below :lg should have different navbar */}
-			<div className=" container mx-auto nav-bar hidden lg:flex  justify-between items-center w-full h-[4.5vh] ">
+			<div className=" container mx-auto nav-bar hidden lg:flex justify-between items-center w-full h-[4.5vh]">
 				<div className="flex w-1/4 xl:w-2/5">
 					<Link to="/" className="font-extrabold text-lg text-gray-1">
 						Shoppy

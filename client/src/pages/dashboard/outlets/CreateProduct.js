@@ -9,6 +9,9 @@ const CreateProduct = () => {
 	const [sale, setSale] = useState();
 	const [published, setPublished] = useState(false);
 	const [featured, setFeatured] = useState(false);
+	// image
+	const [imageBase64, setImageBase64] = useState("");
+	const [image, setImage] = useState("");
 
 	// errors
 	const [formErrors, setFormErrors] = useState({
@@ -34,22 +37,22 @@ const CreateProduct = () => {
 			{
 				name: "Desciption",
 				value: description,
-				validate: ["required", "string", "min:3"],
+				validate: ["required", "string", "max:1000", "min:10"],
 			},
 			{
 				name: "Price",
 				value: price,
-				validate: ["required", "number"],
+				validate: ["required", "number", "min:0"],
 			},
 			{
 				name: "Stock",
 				value: stock,
-				validate: ["required", "number"],
+				validate: ["required", "number", "min:1"],
 			},
 			{
 				name: "Sale",
 				value: sale,
-				validate: ["required", "number"],
+				validate: ["required", "number", "min:0"],
 			},
 		];
 		const validateErrors = validate(dataToValidate);
@@ -71,10 +74,18 @@ const CreateProduct = () => {
 			sale,
 			published,
 			featured,
+			image: imageBase64,
 		});
 		console.log(response);
 	};
-
+	const handleImage = (e) => {
+		setImage(e.target.value);
+		const reader = new FileReader();
+		reader.readAsDataURL(e.target.files[0]);
+		reader.onloadend = () => {
+			setImageBase64(reader.result);
+		};
+	};
 	return (
 		<section>
 			<form onSubmit={submitHandler}>
@@ -104,7 +115,6 @@ const CreateProduct = () => {
 							);
 						})}
 					</div>
-
 					<div className="flex flex-col col-span-1 lg:col-span-1 w-full mb-3">
 						<label htmlFor="" className="text-xl">
 							Price
@@ -219,6 +229,24 @@ const CreateProduct = () => {
 								</span>
 							);
 						})}
+					</div>{" "}
+					<div className="col-span-2 w-full">
+						{imageBase64.length > 0 && (
+							<img
+								src={imageBase64}
+								alt="avatar"
+								style={{ width: "500px", height: "auto" }}
+							/>
+						)}
+					</div>
+					<div className="col-span-2 w-full">
+						<input
+							type="file"
+							name="image"
+							id="image"
+							value={image}
+							onChange={handleImage}
+						/>
 					</div>
 					<div className="col-span-3 w-full">
 						<button

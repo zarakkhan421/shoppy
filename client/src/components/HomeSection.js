@@ -7,11 +7,16 @@ const HomeSection = (props) => {
 	return (
 		<>
 			<div>
-				<h2 className="text-lg font-bold">{title}</h2>
-				<span>{count}</span>
-				<div className="flex">
+				<h2 className="col-span-2 text-4xl font-medium my-2 text-center w-full">
+					{title}
+				</h2>
+				<div className="grid grid-cols-4 ">
 					{products.slice(0, 5).map((product) => {
-						return <Product key={product._id} product={product} />;
+						return (
+							<div className="col-span-1">
+								<Product key={product._id} product={product} />
+							</div>
+						);
 					})}
 				</div>
 			</div>

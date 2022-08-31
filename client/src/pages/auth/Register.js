@@ -85,17 +85,17 @@ const Register = () => {
 			{
 				name: "First Name",
 				value: firstName,
-				validate: ["string", "min:3", "required"],
+				validate: ["string", "min:3", "required", "max:15"],
 			},
 			{
 				name: "Last Name",
 				value: lastName,
-				validate: ["required", "string", "max:3"],
+				validate: ["required", "string", "max:15", "min:3"],
 			},
 			{
 				name: "Phone Number",
 				value: phoneNumber,
-				validate: ["required", "string", "max:4"],
+				validate: ["required", "string"],
 			},
 			{
 				name: "Email",
