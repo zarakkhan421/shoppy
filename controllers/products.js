@@ -3,6 +3,7 @@ const { failedResponse } = require("../utils/failedResponse");
 const { filter } = require("../utils/filter");
 const { successfulResponse } = require("../utils/successfulResponse");
 const _ = require("lodash");
+const { uploadImage, updateImage } = require("../utils/cloudinary");
 
 exports.getProduct = async (req, res) => {
 	try {
@@ -96,11 +97,18 @@ exports.getSaleProducts = async (req, res) => {
 exports.createProduct = async (req, res) => {
 	console.log("product");
 	try {
-		req.body = {
-			user: req.user,
+		const { cloudinaryResponse, imageResponse } = await uploadImage(
+			req.body.image
+		);
+		console.log("4", imageResponse);
+		const product = await Product.create({
 			...req.body,
-		};
-		const product = await Product.create(req.body);
+			user: req.user,
+			image: {
+				id: imageResponse.id,
+				url: imageResponse.url,
+			},
+		});
 		successfulResponse(res, product);
 	} catch (error) {
 		failedResponse(res, error);
@@ -118,9 +126,35 @@ exports.deleteProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
 	try {
-		const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-			new: true,
-		});
+		const onDbExists = await Product.findById(req.params.id);
+
+		const image = req.body.image;
+		console.log("fddf");
+		// console.log(req.body.image);
+		const { cloudinaryResponse, imageResponse } = await updateImage(
+			image,
+			onDbExists
+		);
+		console.log("ddee", imageResponse);
+		const product = await Product.findByIdAndUpdate(
+			req.params.id,
+			{
+				...req.body,
+				image: {
+					id:
+						imageResponse !== undefined
+							? imageResponse.id
+							: onDbExists.image.id,
+					url:
+						imageResponse !== undefined
+							? imageResponse.url
+							: onDbExists.image.url,
+				},
+			},
+			{
+				new: true,
+			}
+		);
 		successfulResponse(res, { product });
 	} catch (error) {
 		failedResponse(res, error);

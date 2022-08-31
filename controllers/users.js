@@ -40,8 +40,8 @@ exports.register = async (req, res) => {
 		const hashedPassword = await bcrypt.hash(password, salt);
 
 		// upload image
-		const cloudinaryResponse = await uploadImage(image);
-
+		const { cloudinaryResponse, imageResponse } = await uploadImage(image);
+		console.log("sssssssssssssssssssss", cloudinaryResponse);
 		const userCreated = await User.create({
 			firstName,
 			lastName,
@@ -50,8 +50,8 @@ exports.register = async (req, res) => {
 			phoneNumber,
 			addresses,
 			image: {
-				id: cloudinaryResponse.public_id,
-				url: cloudinaryResponse.secure_url,
+				id: imageResponse.id,
+				url: imageResponse.url,
 			},
 		});
 
