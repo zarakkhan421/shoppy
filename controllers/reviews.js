@@ -2,11 +2,16 @@ const Product = require("../models/products");
 const Review = require("../models/reviews");
 const { failedResponse } = require("../utils/failedResponse");
 const { successfulResponse } = require("../utils/successfulResponse");
+const {
+	updateRatingsAndReviewsOnProduct,
+} = require("../utils/updateRatingsAndReviewsOnProduct");
 
 exports.createReview = async (req, res) => {
 	try {
 		const { comment, rating } = req.body;
 		const { product } = req.params;
+		console.log(req.body);
+		console.log("de", req.params.product);
 		const reviewFound =
 			(await Review.findOne({
 				product,
@@ -22,21 +27,8 @@ exports.createReview = async (req, res) => {
 				product,
 				user: req.user,
 			});
-			const getReviewsByProduct = await Review.find({ product });
-			console.log(getReviewsByProduct);
-			let ratingsArray = getReviewsByProduct.map(
-				(productReview) => productReview.rating
-			);
-			let ratingsSum = ratingsArray.reduce(
-				(total, current) => total + current,
-				0
-			);
-			let averageRating = ratingsSum / ratingsArray.length;
-			console.log(averageRating);
-			await Product.findByIdAndUpdate(req.params.product, {
-				ratings: averageRating,
-				reviews: ratingsArray.length,
-			});
+			// update ratings in product doc
+			updateRatingsAndReviewsOnProduct(product);
 			successfulResponse(res, { review });
 		} else {
 			failedResponse(res, null, 400, "review on this product already exit");
@@ -66,6 +58,17 @@ exports.getReviews = async (req, res) => {
 	}
 };
 
+exports.getReviewsByProductId = async (req, res) => {
+	try {
+		const reviews = await Review.find({ product: req.params.product }).populate(
+			"user"
+		);
+		successfulResponse(res, { reviews });
+	} catch (error) {
+		failedResponse(res, error);
+	}
+};
+
 exports.getMyReviews = async (req, res) => {
 	try {
 		const reviews = await Review.find({ user: req.user })
@@ -87,6 +90,7 @@ exports.updateReview = async (req, res) => {
 			},
 			{ new: true }
 		);
+		updateRatingsAndReviewsOnProduct(review.product);
 		successfulResponse(res, review);
 	} catch (error) {
 		console.log(error);

@@ -64,8 +64,11 @@ export const counterSlice = createSlice({
 		refreshAccessToken: (state, actions) => {
 			state.accessToken = actions.payload?.serverData.accessToken;
 		},
-		cart: (state, actions) => {
+		setReduxCart: (state, actions) => {
 			state.cart = actions?.payload;
+		},
+		resetReduxCart: (state, actions) => {
+			state.cart = [];
 		},
 	},
 	extraReducers: (builder) => {
@@ -119,6 +122,7 @@ export const getIsLoading = (state) => state.auth.isLoading;
 export const getCart = (state) => state?.auth.cart;
 export const getAvatar = (state) => state.auth.user?.serverData?.user.image.url;
 
-export const { reset, refreshAccessToken, cart } = counterSlice.actions;
+export const { reset, refreshAccessToken, setReduxCart, resetReduxCart } =
+	counterSlice.actions;
 
 export default counterSlice.reducer;

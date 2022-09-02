@@ -90,7 +90,7 @@ const validate = (dataToValidate) => {
 		// validate number
 		if (data.validate.includes("number")) {
 			if (data.validate.includes("required")) {
-				if (data.value === undefined) {
+				if (data.value === undefined || !data.value) {
 					dataErrors.push(data.name + " is required");
 				}
 			}

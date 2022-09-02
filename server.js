@@ -19,10 +19,12 @@ const products = require("./routes/products");
 const user = require("./routes/users");
 const orders = require("./routes/orders");
 const reviews = require("./routes/reviews");
+const orderItems = require("./routes/orderItems");
 
 app.use("/api/products", products);
 app.use("/api/user", user);
 app.use("/api/orders", orders);
 app.use("/api/reviews", reviews);
+app.use("/api/order-items", orderItems);
 
 app.listen(PORT, () => console.log(`server running on ${PORT}`));

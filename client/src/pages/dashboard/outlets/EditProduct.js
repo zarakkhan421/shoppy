@@ -25,9 +25,16 @@ const EditProduct = () => {
 		priceErrors: [],
 		stockErrors: [],
 		saleErrors: [],
+		imageErrors: [],
 	});
-	const { nameErrors, decriptionErrors, priceErrors, stockErrors, saleErrors } =
-		formErrors;
+	const {
+		nameErrors,
+		decriptionErrors,
+		priceErrors,
+		stockErrors,
+		saleErrors,
+		imageErrors,
+	} = formErrors;
 	const axiosPrivateInstance = useAxiosPrivate();
 
 	useEffect(() => {
@@ -82,6 +89,11 @@ const EditProduct = () => {
 				value: sale,
 				validate: ["required", "number", "min:0"],
 			},
+			{
+				name: "Image",
+				value: imageBase64,
+				validate: ["required", "string"],
+			},
 		];
 		const validateErrors = validate(dataToValidate);
 		setFormErrors({
@@ -90,6 +102,7 @@ const EditProduct = () => {
 			priceErrors: validateErrors[2],
 			stockErrors: validateErrors[3],
 			saleErrors: validateErrors[4],
+			imageErrors: validateErrors[5],
 		});
 		if (validateErrors.flat().length > 0) {
 			return;
@@ -269,7 +282,19 @@ const EditProduct = () => {
 							id="image"
 							value={selectedImage}
 							onChange={handleImage}
+							className="block w-full text-md text-gray-1
+      									file:mr-4 file:py-2 file:px-4
+      									file:rounded file:border-slate-200
+      									file:text-sm file:font-semibold shadow-none hover:file:bg-slate-300
+     									 file:bg-slate-200 file:text-gray-1"
 						/>
+						{imageErrors.map((err, i) => {
+							return (
+								<span className="text-rose-500" key={i}>
+									{err}
+								</span>
+							);
+						})}
 					</div>
 					<div className="col-span-3 w-full">
 						<button

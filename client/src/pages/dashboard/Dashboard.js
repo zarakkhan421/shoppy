@@ -104,7 +104,7 @@ const Dashboard = () => {
 					</NavLink>
 				</div>
 			</div>
-			<div className="w-10/12 table-cell pt-12 pl-1">
+			<div className="w-10/12 table-cell pt-3 pl-5">
 				<Outlet />
 			</div>
 		</div>

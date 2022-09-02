@@ -90,7 +90,7 @@ function App() {
 								}
 							/>
 							<Route
-								path="status/:id/:item"
+								path="status/:id"
 								element={
 									<ProtectedRoute
 										AllowedRoles={["admin", "editor"]}
@@ -104,7 +104,7 @@ function App() {
 						<Route path="reviews">
 							<Route index element={<ProtectedRoute Component={MyReviews} />} />
 							<Route
-								path="create/:order/:item"
+								path="create/:order_item"
 								element={<ProtectedRoute Component={CreateReview} />}
 							/>
 							<Route

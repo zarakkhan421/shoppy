@@ -20,7 +20,7 @@ const Reviews = () => {
 	}, []);
 	return (
 		<div>
-			<h2>All Reviews</h2>
+			<h2 className="my-2 text-4xl font-bold">All Reviews</h2>
 			<ReviewSection reviews={reviews} isAll />
 		</div>
 	);

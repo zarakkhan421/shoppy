@@ -38,6 +38,7 @@ const orderItemsSchema = new mongoose.Schema(
 		user: {
 			type: mongoose.Schema.ObjectId,
 			ref: "Users",
+			default: "",
 		},
 		shippedAt: Date,
 		deliveredAt: Date,

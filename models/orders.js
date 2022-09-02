@@ -95,7 +95,6 @@ const orderSchema = new mongoose.Schema(
 
 		shippingCost: {
 			type: Number,
-			default: 0,
 			required: [true, "please provide shipping cost"],
 		},
 	},

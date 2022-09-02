@@ -1,3 +1,4 @@
+import moment from "moment";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Rating } from "react-simple-star-rating";
@@ -19,33 +20,44 @@ const ReviewSection = (props) => {
 	};
 	console.log("reviewsection");
 	return (
-		<div>
+		<>
 			{reviews.map((review) => {
 				return (
-					<div key={review._id} className="flex">
-						<div className="flex flex-col">
-							<div>{review.product.name}</div>
-							<div>
+					<div
+						key={review._id}
+						className="flex bg-slate-50 px-2 py-5 rounded mb-3 shadow-sm hover:shadow"
+					>
+						<div className="flex flex-col mr-4">
+							<div className="text-2xl font-medium">{review.product.name}</div>
+							<div className="font-semibold text-sm">
+								{moment(review.createdAt).format("ll")}
+							</div>
+							<div className="text-md">
 								By: {review.user.firstName + " " + review.user.lastName}
 							</div>
-							<div>
-								rating
+							<div className="ml-[-3px]">
 								<Rating
 									readonly
 									allowHover={false}
 									ratingValue={review.rating * 20}
+									size={25}
 								/>
 							</div>
 							{!isAll && (
 								<div className="flex">
-									<div>
-										<Link to={`/dashboard/reviews/edit/${review._id}`}>
+									<div className="mr-2">
+										<Link
+											to={`/dashboard/reviews/edit/${review._id}`}
+											className="text-blue-400"
+										>
 											Edit
 										</Link>
 									</div>
 									<div>
 										<form onSubmit={(e) => deleteHandler(e, review._id)}>
-											<button type="submit">Delete</button>
+											<button type="submit" className="text-red-400">
+												Delete
+											</button>
 										</form>
 									</div>
 								</div>
@@ -55,7 +67,7 @@ const ReviewSection = (props) => {
 					</div>
 				);
 			})}
-		</div>
+		</>
 	);
 };
 

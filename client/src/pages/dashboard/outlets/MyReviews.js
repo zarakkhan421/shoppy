@@ -24,7 +24,7 @@ const MyReviews = () => {
 
 	return (
 		<div>
-			<h2>My Reviews</h2>
+			<h2 className="my-2 text-4xl font-bold">My Reviews</h2>
 			<ReviewSection reviews={reviews} />
 		</div>
 	);

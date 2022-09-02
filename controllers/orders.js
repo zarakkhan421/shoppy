@@ -1,22 +1,26 @@
 const Order = require("../models/orders");
+const OrderItems = require("../models/orderItems");
 const { failedResponse } = require("../utils/failedResponse");
 const { successfulResponse } = require("../utils/successfulResponse");
 const { totalOrderCost } = require("../utils/totalOrderCost");
 
 exports.createOrder = async (req, res) => {
 	try {
-		const { customerDetails, deliveryAddress, orderItems, user, shippingCost } =
-			req.body;
-		const totalCost = totalOrderCost(orderItems);
-		const order = await Order.create({
-			customerDetails,
-			deliveryAddress,
-			orderItems,
-			user,
-			totalCost,
-			shippingCost,
-		});
-		successfulResponse(res, order);
+		let { orderItemsData } = req.body;
+		const shippingCost = req.body.orderItemsData.length * 2;
+		const totalCost = totalOrderCost(orderItemsData);
+		const orderData = { ...req.body, shippingCost, totalCost };
+		console.log("666", orderData);
+		const order = await Order.create(orderData);
+		console.log("rrr", order);
+		orderItemsData = orderItemsData.map((orderItem) => ({
+			...orderItem,
+			order: order.id,
+		}));
+		console.log("222", orderItemsData);
+		const orderItems = await OrderItems.insertMany(orderItemsData);
+		console.log("sss", orderItems);
+		successfulResponse(res, { order, orderItems });
 	} catch (error) {
 		failedResponse(res, error);
 	}
@@ -35,13 +39,7 @@ exports.getOrder = async (req, res) => {
 
 exports.getMyOrders = async (req, res) => {
 	try {
-		let orders = await Order.find({ user: req.user }).populate(
-			"orderItems.product"
-		);
-		// const products = await Product.find({ "reviews.user": req.user });
-		// // orders.map((order) => ({...order, oo}));
-		// console.log("sdsd", products);
-		// console.log("rrr", orders);
+		const orders = await Order.find({ user: req.user });
 		successfulResponse(res, { orders });
 	} catch (error) {
 		failedResponse(res, error);
@@ -52,67 +50,6 @@ exports.getAllOrders = async (req, res) => {
 	try {
 		const orders = await Order.find();
 		successfulResponse(res, { orders });
-	} catch (error) {
-		failedResponse(res, error);
-	}
-};
-
-exports.changeStatusToShipped = async (req, res) => {
-	console.log("sssf4");
-	try {
-		const { id, item, status } = req.params;
-		const order = await Order.findOneAndUpdate(
-			{ id, "orderItems._id": item },
-			{
-				$set: {
-					"orderItems.$.orderStatus": "shipped",
-					"orderItems.$.shippedAt": Date.now(),
-				},
-			},
-			{ new: true }
-		);
-		console.log("4545");
-		successfulResponse(res, order);
-	} catch (error) {
-		failedResponse(res, error);
-	}
-};
-exports.changeStatusToDelivered = async (req, res) => {
-	console.log("sssf4");
-	try {
-		const { id, item, status } = req.params;
-		const order = await Order.findOneAndUpdate(
-			{ id, "orderItems._id": item },
-			{
-				$set: {
-					"orderItems.$.orderStatus": "delivered",
-					"orderItems.$.deliveredAt": Date.now(),
-				},
-			},
-			{ new: true }
-		);
-		console.log("4545");
-		successfulResponse(res, order);
-	} catch (error) {
-		failedResponse(res, error);
-	}
-};
-exports.changeStatusToCancelled = async (req, res) => {
-	console.log("sssf4");
-	try {
-		const { id, item, status } = req.params;
-		const order = await Order.findOneAndUpdate(
-			{ id, "orderItems._id": item },
-			{
-				$set: {
-					"orderItems.$.orderStatus": "cancelled",
-					"orderItems.$.cancelledAt": Date.now(),
-				},
-			},
-			{ new: true }
-		);
-		console.log("4545");
-		successfulResponse(res, order);
 	} catch (error) {
 		failedResponse(res, error);
 	}
