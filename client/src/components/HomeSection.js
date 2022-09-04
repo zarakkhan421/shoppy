@@ -10,7 +10,7 @@ const HomeSection = (props) => {
 				<h2 className="col-span-2 text-4xl font-medium my-2 text-center w-full">
 					{title}
 				</h2>
-				<div className="grid grid-cols-4 ">
+				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3">
 					{products.slice(0, 5).map((product) => {
 						return (
 							<div className="col-span-1">

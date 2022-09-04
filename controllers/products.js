@@ -1,4 +1,5 @@
 const Product = require("../models/products");
+const Review = require("../models/reviews");
 const { failedResponse } = require("../utils/failedResponse");
 const { filter } = require("../utils/filter");
 const { successfulResponse } = require("../utils/successfulResponse");
@@ -8,6 +9,7 @@ const { uploadImage, updateImage } = require("../utils/cloudinary");
 exports.getProduct = async (req, res) => {
 	try {
 		const product = await Product.findById(req.params.id);
+
 		successfulResponse(res, { product });
 	} catch (error) {
 		failedResponse(res, error);

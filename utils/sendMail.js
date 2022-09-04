@@ -1,5 +1,15 @@
 const nodeMailer = require("nodemailer");
-// option is an object that has to:, sunject:,text: and text is email body
+const hbs = require("nodemailer-express-handlebars");
+const path = require("path");
+const handlebarOptions = {
+	viewEngine: {
+		extName: ".handlebars",
+		partialsDir: path.join(__dirname, "..", "templates"),
+		defaultLayout: false,
+	},
+	viewPath: path.join(__dirname, "..", "templates"),
+	extName: ".handlebars",
+};
 const sendMail = async (options) => {
 	const transporter = nodeMailer.createTransport({
 		host: "smtp.google.com",
@@ -12,13 +22,23 @@ const sendMail = async (options) => {
 			pass: process.env.PASSWORD,
 		},
 	});
-	const mailOpions = {
+	transporter.use("compile", hbs(handlebarOptions));
+	const mailOptions = {
 		from: process.env.MAIL,
 		to: options.email,
 		subject: options.subject,
-		text: options.message,
+		// text: options.message,
+		template: "email",
+		context: {
+			title: "my title",
+			text: "text",
+		},
 	};
-	await transporter.sendMail(mailOpions);
+	try {
+		await transporter.sendMail(mailOptions);
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 module.exports = { sendMail };

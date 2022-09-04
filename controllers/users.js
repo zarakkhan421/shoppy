@@ -26,7 +26,12 @@ exports.register = async (req, res) => {
 		} = req.body;
 		const existingUser = await User.findOne({ email });
 		if (existingUser) {
-			return failedResponse(res, null, 406, "user already exist");
+			return failedResponse(
+				res,
+				null,
+				406,
+				"User with this email already exist"
+			);
 		}
 		if (password !== confirmPassword) {
 			return failedResponse(
@@ -88,7 +93,7 @@ exports.login = async (req, res) => {
 			console.log(user);
 			return successfulResponse(res, { user, accessToken });
 		} else {
-			return failedResponse(res, {}, 400, "incorrect credentials");
+			return failedResponse(res, {}, 400, "Incorrect Credentials");
 		}
 	} catch (error) {
 		failedResponse(res, error);

@@ -80,10 +80,16 @@ const Products = () => {
 										</td>
 										<td className="border text-center">
 											<div className="flex justify-center">
-												<Link to={`edit/${product._id}`} className="mx-1">
+												<Link
+													to={`edit/${product._id}`}
+													className="text-blue-400 mx-1"
+												>
 													Edit
 												</Link>
-												<form onSubmit={deleteProduct} className=" mx-1">
+												<form
+													onSubmit={deleteProduct}
+													className="text-red-400 mx-1"
+												>
 													<input
 														type="hidden"
 														name="productId"

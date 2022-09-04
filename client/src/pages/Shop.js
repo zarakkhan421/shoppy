@@ -24,7 +24,7 @@ const Shop = () => {
 			console.log(response);
 			setProducts(response.data.serverData.products);
 			if (!priceChanged) {
-				setMaxPrice(response.data.serverData.maxProductPrice[0].price);
+				setMaxPrice(response.data.serverData.maxProductPrice);
 			}
 		} catch (error) {
 			console.log(error);
@@ -52,7 +52,7 @@ const Shop = () => {
 
 	return (
 		<div className="flex flex-col">
-			<div className="flex my-2">
+			<div className="flex flex-wrap my-2">
 				<div className="flex mr-2 items-center">
 					<label htmlFor="" className="text-lg mr-1">
 						Min Value
@@ -106,7 +106,9 @@ const Shop = () => {
 							/>
 						</div>
 						{openRating && (
-							<div className={`border absolute w-[161px] bg-white border-t-0`}>
+							<div
+								className={`border absolute w-[161px] z-20 bg-white border-t-0`}
+							>
 								<div className="relative border border-gray-2 border-t-0">
 									<input
 										type="checkbox"
@@ -215,7 +217,7 @@ const Shop = () => {
 				</div>
 			</div>
 			<div>
-				<div className="grid grid-cols-4 gap-2">
+				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3">
 					{products.map((product) => {
 						return (
 							<div className="col-span-1">

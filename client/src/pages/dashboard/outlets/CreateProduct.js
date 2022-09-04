@@ -1,6 +1,9 @@
 import { useState } from "react";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import validate from "../../../utils/validate";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const CreateProduct = () => {
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
@@ -9,6 +12,8 @@ const CreateProduct = () => {
 	const [sale, setSale] = useState();
 	const [published, setPublished] = useState(false);
 	const [featured, setFeatured] = useState(false);
+
+	const [isLoading, setIsLoading] = useState(false);
 	// image
 	const [imageBase64, setImageBase64] = useState("");
 	const [image, setImage] = useState("");
@@ -59,7 +64,7 @@ const CreateProduct = () => {
 			{
 				name: "Sale",
 				value: sale,
-				validate: ["required", "number", "min:0"],
+				validate: ["number", "min:0"],
 			},
 			{
 				name: "Image",
@@ -79,17 +84,28 @@ const CreateProduct = () => {
 		if (validateErrors.flat().length > 0) {
 			return;
 		}
-		const response = await axiosPrivateInstance.post("/products", {
-			name,
-			description,
-			price,
-			stock,
-			sale,
-			published,
-			featured,
-			image: imageBase64,
-		});
-		console.log(response);
+		try {
+			setIsLoading(true);
+			const response = axiosPrivateInstance.post("/products", {
+				name,
+				description,
+				price,
+				stock,
+				sale,
+				published,
+				featured,
+				image: imageBase64,
+			});
+			toast.promise(response, {
+				pending: "Creating Product, Please wait...",
+				success: "Product has been Created!",
+				error: "something went wrong!",
+			});
+			console.log(await response);
+			setIsLoading(false);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 	const handleImage = (e) => {
 		setImage(e.target.value);
@@ -280,6 +296,17 @@ const CreateProduct = () => {
 						>
 							Submit
 						</button>
+						<ToastContainer
+							position="bottom-center"
+							autoClose={5000}
+							hideProgressBar={false}
+							newestOnTop={false}
+							closeOnClick
+							rtl={false}
+							pauseOnFocusLoss
+							draggable
+							pauseOnHover
+						/>
 					</div>
 				</div>
 			</form>

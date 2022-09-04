@@ -87,11 +87,11 @@ const EditProduct = () => {
 			{
 				name: "Sale",
 				value: sale,
-				validate: ["required", "number", "min:0"],
+				validate: ["number", "min:0"],
 			},
 			{
 				name: "Image",
-				value: imageBase64,
+				value: imageBase64 ? imageBase64 : image.url,
 				validate: ["required", "string"],
 			},
 		];

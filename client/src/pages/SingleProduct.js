@@ -255,8 +255,8 @@ const SingleProduct = () => {
 							Add to Cart
 						</button>
 					</div>
-
-					<button onClick={handleRemoveCartItem}>Remove from Cart</button>
+					{/* 
+					<button onClick={handleRemoveCartItem}>Remove from Cart</button> */}
 				</div>
 				<div className="flex flex-col items-center w-full mt-[50px]">
 					<div className="flex items-center w-full justify-evenly mb-[60px]">

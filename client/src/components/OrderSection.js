@@ -10,7 +10,11 @@ const OrderSection = (props) => {
 	const { order, isAll } = props;
 	const axiosPrivateInstance = useAxiosPrivate();
 	const [orderItems, setOrderItems] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
 	useEffect(() => {
+		setTimeout(() => {
+			setIsLoading(false);
+		}, 1000);
 		const getOrderItems = async () => {
 			try {
 				const response = await axiosPrivateInstance.get(
@@ -72,11 +76,17 @@ const OrderSection = (props) => {
 								</div>
 								<div className="mx-2 my-10 flex items-center">
 									{/* processing */}
-									<div className="rounded-full w-4 h-4 bg-primary z-10"></div>
+									<div
+										className={`rounded-full transition-all ease duration-[2500ms] w-4 h-4 ${
+											isLoading ? "bg-transparent" : "bg-primary"
+										} z-10`}
+									></div>
 									{/* end processing */}
 									{/* shipped */}
 									<div
-										className={`w-80 h-1 m-[-2px] z-0 ${
+										className={`${
+											isLoading ? "w-0" : "w-80"
+										}  transition-all ease duration-1000 h-1 m-[-2px] z-0 ${
 											orderItem.orderStatus === "shipped" ||
 											orderItem.orderStatus === "delivered"
 												? "bg-primary"
@@ -84,9 +94,11 @@ const OrderSection = (props) => {
 										}`}
 									></div>
 									<div
-										className={`rounded-full w-4 h-4 z-10 ${
-											orderItem.orderStatus === "shipped" ||
-											orderItem.orderStatus === "delivered"
+										className={`rounded-full transition-all ease duration-[2500ms] w-4 h-4 z-10 ${
+											isLoading
+												? "bg-transparent"
+												: orderItem.orderStatus === "shipped" ||
+												  orderItem.orderStatus === "delivered"
 												? "bg-primary"
 												: "bg-gray-2"
 										}`}
@@ -94,15 +106,19 @@ const OrderSection = (props) => {
 									{/* end shipped */}
 									{/* delivered */}
 									<div
-										className={`w-80 h-1 m-[-2px] z-0 ${
+										className={`${
+											isLoading ? "w-0" : "w-80"
+										} h-1 m-[-2px] z-0 ${
 											orderItem.orderStatus === "delivered"
 												? "bg-primary"
 												: "bg-gray-2"
 										}`}
 									></div>
 									<div
-										className={`rounded-full w-4 h-4 z-10 ${
-											orderItem.orderStatus === "delivered"
+										className={`rounded-full transition-all ease duration-[2500ms] w-4 h-4 z-10 ${
+											isLoading
+												? "bg-transparent"
+												: orderItem.orderStatus === "delivered"
 												? "bg-primary"
 												: "bg-gray-2"
 										}`}

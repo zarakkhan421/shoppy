@@ -51,7 +51,10 @@ exports.getReview = async (req, res) => {
 
 exports.getReviews = async (req, res) => {
 	try {
-		const reviews = await Review.find().populate("user").populate("product");
+		const reviews = await Review.find()
+			.populate("user")
+			.populate("product")
+			.sort("-createdAt");
 		successfulResponse(res, { reviews });
 	} catch (error) {
 		failedResponse(res, error);
@@ -60,9 +63,9 @@ exports.getReviews = async (req, res) => {
 
 exports.getReviewsByProductId = async (req, res) => {
 	try {
-		const reviews = await Review.find({ product: req.params.product }).populate(
-			"user"
-		);
+		const reviews = await Review.find({ product: req.params.product })
+			.populate("user")
+			.sort("-createdAt");
 		successfulResponse(res, { reviews });
 	} catch (error) {
 		failedResponse(res, error);
@@ -73,7 +76,8 @@ exports.getMyReviews = async (req, res) => {
 	try {
 		const reviews = await Review.find({ user: req.user })
 			.populate("user")
-			.populate("product");
+			.populate("product")
+			.sort("-createdAt");
 		successfulResponse(res, { reviews });
 	} catch (error) {
 		failedResponse(res, error);

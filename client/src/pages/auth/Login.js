@@ -7,12 +7,22 @@ import {
 	getlastName,
 	login,
 	getIsLoading,
+	getIsLoggedIn,
+	getIsSuccess,
+	getMessage,
 } from "../../features/userSlice";
 import validate from "../../utils/validate";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 const Login = () => {
 	const userId = useSelector(getUserId);
 	const userRole = useSelector(getUserRole);
 	const isLoading = useSelector(getIsLoading);
+	const isLoggedIn = useSelector(getIsLoggedIn);
+	const isSuccess = useSelector(getIsSuccess);
+	const message = useSelector(getMessage);
+	const navigate = useNavigate();
 	const [formData, setFormData] = useState({
 		email: "",
 		password: "",
@@ -54,6 +64,12 @@ const Login = () => {
 		if (validateErrors.flat().length > 0) return;
 		dispatch(login(formData));
 		console.log("dispatch login");
+		if (!isSuccess && !isLoading) {
+			toast.error(message);
+		}
+		if (isLoggedIn) {
+			navigate("/");
+		}
 	};
 
 	return (
@@ -114,6 +130,18 @@ const Login = () => {
 						</button>
 					</div>
 				</div>
+
+				<ToastContainer
+					position="bottom-center"
+					autoClose={5000}
+					hideProgressBar={false}
+					newestOnTop={false}
+					closeOnClick
+					rtl={false}
+					pauseOnFocusLoss
+					draggable
+					pauseOnHover
+				/>
 			</form>
 		</section>
 	);

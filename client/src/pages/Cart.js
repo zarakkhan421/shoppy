@@ -67,7 +67,7 @@ const Cart = () => {
 	return (
 		<div className="flex justify-between">
 			{console.log("render")}
-			<div>
+			<div className="w-1/2">
 				<h2 className="text-2xl font-semibold">Items</h2>
 				<div className="mb-4 flex items-center">
 					<input

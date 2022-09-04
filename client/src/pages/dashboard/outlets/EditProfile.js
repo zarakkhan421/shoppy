@@ -471,6 +471,11 @@ const EditProfile = () => {
 							id="image"
 							value={selectedImage}
 							onChange={handleImage}
+							className="block w-full text-md text-gray-1
+      									file:mr-4 file:py-2 file:px-4
+      									file:rounded file:border-slate-200
+      									file:text-sm file:font-semibold shadow-none hover:file:bg-slate-300
+     									 file:bg-slate-200 file:text-gray-1"
 						/>
 					</div>
 					<div className="col-span-2 w-full">

@@ -21,15 +21,26 @@ const Search = () => {
 		<div>
 			<div>
 				<form onSubmit={getSearchedProducts}>
-					<label htmlFor="">Search</label>
-					<input
-						type="text"
-						name="search"
-						id="search"
-						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
-					/>
-					<button type="submit">Search</button>
+					<div className="flex w-2/3 my-5 items-center h-6">
+						<label htmlFor="" className="text-xl mr-2">
+							Search
+						</label>
+						<input
+							type="text"
+							name="search"
+							id="search"
+							className="border border-gray-2 rounded lg:w-4/5 w:full outline-gray-1 h-8 mr-2"
+							value={searchTerm}
+							onChange={(e) => setSearchTerm(e.target.value)}
+						/>
+
+						<button
+							className="bg-primary text-white p-2 px-8 active:p-[4px] active:px-[30px]  rounded-md"
+							type="submit"
+						>
+							Search
+						</button>
+					</div>
 				</form>
 			</div>
 			<div className="flex">

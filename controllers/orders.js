@@ -28,6 +28,7 @@ exports.createOrder = async (req, res) => {
 
 exports.getOrder = async (req, res) => {
 	try {
+		console.log("ft4t45");
 		const order = await Order.findById(req.params.id)
 			.populate("user", "name email")
 			.populate("orderItems.product");
@@ -39,7 +40,7 @@ exports.getOrder = async (req, res) => {
 
 exports.getMyOrders = async (req, res) => {
 	try {
-		const orders = await Order.find({ user: req.user });
+		const orders = await Order.find({ user: req.user }).sort("-createdAt");
 		successfulResponse(res, { orders });
 	} catch (error) {
 		failedResponse(res, error);
@@ -48,7 +49,7 @@ exports.getMyOrders = async (req, res) => {
 
 exports.getAllOrders = async (req, res) => {
 	try {
-		const orders = await Order.find();
+		const orders = await Order.find().sort("-createdAt");
 		successfulResponse(res, { orders });
 	} catch (error) {
 		failedResponse(res, error);

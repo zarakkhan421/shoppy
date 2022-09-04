@@ -30,7 +30,7 @@ function App() {
 	return (
 		<div>
 			<Nav />
-			<div className="container mx-auto">
+			<div className="lg:container mx-auto">
 				<Routes>
 					<Route path="/unauthorized" element={<UnAuthorized />} />
 					<Route path="/search" element={<Search />} />

@@ -7,13 +7,23 @@ import {
 	getlastName,
 	getUserRole,
 	register,
+	getIsLoggedIn,
+	getIsSuccess,
+	getMessage,
 } from "../../features/userSlice";
 import validate from "../../utils/validate";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 const Register = () => {
 	const userId = useSelector(getUserId);
 	const userRole = useSelector(getUserRole);
 	const isLoading = useSelector(getIsLoading);
+	const isLoggedIn = useSelector(getIsLoggedIn);
+	const isSuccess = useSelector(getIsSuccess);
+	const message = useSelector(getMessage);
+
+	const navigate = useNavigate();
 	//states
 	const [provideAdresses, setProvideAddresses] = useState(false);
 	// errors
@@ -24,6 +34,7 @@ const Register = () => {
 		passwordErrors: [],
 		confirmPasswordErrors: [],
 		phoneNumberErrors: [],
+		imageErrors: [],
 	});
 	const {
 		firstNameErrors,
@@ -32,6 +43,7 @@ const Register = () => {
 		passwordErrors,
 		confirmPasswordErrors,
 		phoneNumberErrors,
+		imageErrors,
 	} = formErrors;
 	// image
 	const [image, setImage] = useState("");
@@ -112,6 +124,11 @@ const Register = () => {
 				value: [confirmPassword, password],
 				validate: ["required", "string", "match", "min:8"],
 			},
+			{
+				name: "Image",
+				value: imageBase64,
+				validate: ["required", "string"],
+			},
 		];
 		const validateErrors = validate(dataToValidate);
 		setFormErrors({
@@ -121,6 +138,7 @@ const Register = () => {
 			emailErrors: validateErrors[3],
 			passwordErrors: validateErrors[4],
 			confirmPasswordErrors: validateErrors[5],
+			imageErrors: validateErrors[6],
 		});
 		if (validateErrors.flat().length > 0) {
 			return;
@@ -149,6 +167,12 @@ const Register = () => {
 			image: imageBase64,
 		};
 		dispatch(register(data));
+		if (!isSuccess && isLoading) {
+			toast.error(message);
+		}
+		if (isLoggedIn && !isLoading) {
+			navigate("/");
+		}
 	};
 
 	const handleImage = (e) => {
@@ -439,7 +463,19 @@ const Register = () => {
 							id="image"
 							value={image}
 							onChange={handleImage}
+							className="block w-full text-md text-gray-1
+      									file:mr-4 file:py-2 file:px-4
+      									file:rounded file:border-slate-200
+      									file:text-sm file:font-semibold shadow-none hover:file:bg-slate-300
+     									 file:bg-slate-200 file:text-gray-1"
 						/>
+						{imageErrors.map((err, i) => {
+							return (
+								<span className="text-rose-500" key={i}>
+									{err}
+								</span>
+							);
+						})}
 					</div>
 					<div className="col-span-2 w-full">
 						<button
@@ -450,6 +486,17 @@ const Register = () => {
 						</button>
 					</div>
 				</div>
+				<ToastContainer
+					position="bottom-center"
+					autoClose={5000}
+					hideProgressBar={false}
+					newestOnTop={false}
+					closeOnClick
+					rtl={false}
+					pauseOnFocusLoss
+					draggable
+					pauseOnHover
+				/>
 			</form>
 		</section>
 	);

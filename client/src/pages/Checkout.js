@@ -388,7 +388,7 @@ const Checkout = () => {
 	};
 
 	return (
-		<div className="flex">
+		<div className="flex justify-between">
 			<div>
 				<form onSubmit={submitOrderHandler}>
 					<div className="grid grid-cols-2 gap-x-5 place-items-center">
@@ -479,24 +479,26 @@ const Checkout = () => {
 						</div>
 						<h2 className="col-span-2 text-2xl w-full">Delivery Details</h2>
 						{/* radios */}
-						<div className="col-span-2 w-full flex justify-between">
+						<div className="col-span-2 w-full flex ">
 							{isLoggedIn && (
 								<>
-									<div className="flex">
+									<div className="flex mr-2">
 										<input
 											type="radio"
 											name="homeAddressRadio"
 											checked={homeAddressRadio}
 											onChange={onChangeAddressHandler}
+											className="mr-1"
 										/>
 										<label htmlFor="">Same as Home Address</label>
 									</div>
-									<div className="flex">
+									<div className="flex mr-2">
 										<input
 											type="radio"
 											name="shippingAddressRadio"
 											checked={shippingAddressRadio}
 											onChange={onChangeAddressHandler}
+											className="mr-1"
 										/>
 										<label htmlFor="">Same as Shipping Address</label>
 									</div>
@@ -505,12 +507,13 @@ const Checkout = () => {
 
 							{isLoggedIn ? (
 								<>
-									<div className="flex ">
+									<div className="flex mr-2">
 										<input
 											type="radio"
 											name="newAddressRadio"
 											checked={newAddressRadio}
 											onChange={onChangeAddressHandler}
+											className="mr-1"
 										/>
 										<label htmlFor="">Enter New Delivery Address</label>
 									</div>
@@ -846,7 +849,7 @@ const Checkout = () => {
 				</form>
 			</div>
 
-			<div>
+			{/* <div>
 				<h2>Order Summary</h2>
 				<div>
 					<span>Subtotal of selected items:</span>
@@ -863,6 +866,31 @@ const Checkout = () => {
 				<div>
 					<span>Total:</span>
 					<span>{total}</span>
+				</div>
+			</div> */}
+			<div className="flex flex-col items-start px-5 py-9 w-1/3 shadow-md h-[275px]">
+				<h2 className="font-bold text-3xl mb-2">Order Summary</h2>
+				<div className="flex mb-2">
+					<span className="font-semibold text-xl mr-1">
+						Subtotal of selected items:
+					</span>
+					<span className="font-semibold text-xl mr-1">$ {subTotal}</span>
+				</div>
+				<div className="flex mb-2">
+					<span className="font-light text-xl mr-1">
+						Per Item Shipping Cost:
+					</span>
+					<span className="font-light text-xl mr-1">
+						$ {shippingCostPerItem}
+					</span>
+				</div>
+				<div className="flex mb-2">
+					<span className="font-light text-xl mr-1">Shipping Cost:</span>
+					<span className="font-light text-xl mr-1">$ {totalShippingCost}</span>
+				</div>
+				<div className="flex mb-4 items-center">
+					<span className="font-bold text-4xl mr-1">Total:</span>
+					<span className="font-bold text-4xl mr-1">$ {total}</span>
 				</div>
 			</div>
 		</div>
