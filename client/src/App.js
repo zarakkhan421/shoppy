@@ -26,6 +26,8 @@ import useAxiosPrivate from "./hooks/useAxiosPrivate";
 import { useDispatch } from "react-redux";
 import { reset } from "./features/userSlice";
 import Logout from "./pages/auth/Logout";
+import ResetPassword from "./pages/auth/ResetPassword";
+import ForgetPassword from "./pages/auth/ForgetPassword";
 function App() {
 	return (
 		<div>
@@ -130,6 +132,11 @@ function App() {
 					<Route path="/register" element={<Register />} />
 					<Route path="/shop" element={<Shop />} />
 					<Route path="logout" element={<Logout />} />
+					<Route
+						path="reset-password/:reset_token"
+						element={<ResetPassword />}
+					/>
+					<Route path="forget-password" element={<ForgetPassword />} />
 					<Route exact path="/" element={<Home />} />
 				</Routes>
 			</div>

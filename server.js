@@ -15,6 +15,8 @@ app.use(express.json({ limit: "50mb" }));
 // app.use(express.static(path.join(__dirname, "..", "templates/styles.css")));
 const PORT = process.env.PORT || 5000;
 connectDB();
+path = require("path");
+app.set("view engine", "ejs");
 
 const products = require("./routes/products");
 const user = require("./routes/users");
@@ -27,5 +29,13 @@ app.use("/api/user", user);
 app.use("/api/orders", orders);
 app.use("/api/reviews", reviews);
 app.use("/api/order-items", orderItems);
+
+// email template testing
+app.get("/forget", (req, res) => {
+	res.render(path.join(__dirname, "templates/forgetPasswordEmail.ejs"), {
+		resetLink: "http://localhost:5000/forget",
+		user: { firstName: "zarak" },
+	});
+});
 
 app.listen(PORT, () => console.log(`server running on ${PORT}`));

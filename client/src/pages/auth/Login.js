@@ -14,8 +14,10 @@ import {
 import validate from "../../utils/validate";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useAxios from "../../hooks/useAxios";
 const Login = () => {
+	const axiosInstance = useAxios();
 	const userId = useSelector(getUserId);
 	const userRole = useSelector(getUserRole);
 	const isLoading = useSelector(getIsLoading);
@@ -121,13 +123,19 @@ const Login = () => {
 							);
 						})}
 					</div>
-					<div className="col-span-2 w-full">
+					<div className="flex items-center col-span-2 w-full">
 						<button
 							type="submit"
-							className="bg-primary text-white p-3 px-12 active:p-[10px] active:px-[40px] mt-2 rounded-md"
+							className="bg-primary text-white p-3 px-12 active:p-[10px] active:px-[40px] mt-2 mr-5 rounded-md"
 						>
 							Login
 						</button>
+						<Link
+							to="/forget-password"
+							className="text-blue-500 font-medium text-medium mt-2"
+						>
+							Forget Password?
+						</Link>
 					</div>
 				</div>
 

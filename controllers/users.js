@@ -11,7 +11,8 @@ const crypto = require("crypto");
 const { sendMail } = require("../utils/sendMail");
 const sendUserData = require("../utils/sendUserData");
 const { cloudinary, uploadImage, updateImage } = require("../utils/cloudinary");
-
+const ejs = require("ejs");
+const path = require("path");
 exports.register = async (req, res) => {
 	try {
 		const {
@@ -259,15 +260,16 @@ exports.forgetPassword = async (req, res) => {
 	}
 	const unHashedToken = crypto.randomBytes(20).toString("hex");
 
-	const resetLink = `${req.protocol}://${req.get(
-		"host"
-	)}/api/user/reset-password/${unHashedToken}`;
-	const message = `Click this link ${resetLink} to reset your password`;
-
+	const resetLink = `${process.env.CLIENT_URL}/reset-password/${unHashedToken}`;
+	// const message = `Click this link ${resetLink} to reset your password`;
+	const html = await ejs.renderFile(
+		path.join(__dirname, "../templates/forgetPasswordEmail.ejs"),
+		{ resetLink, user: sendUserData(foundUser) }
+	);
 	await sendMail({
 		email: foundUser.email,
 		subject: "Reset Password",
-		message,
+		template: html,
 	});
 	const hashedToken = crypto
 		.createHash("sha256")
@@ -281,7 +283,7 @@ exports.forgetPassword = async (req, res) => {
 			resetPasswordExpire: Date.now() + 15 * 60 * 1000,
 		}
 	);
-	successfulResponse(res, { user }, 200, `email sent to ${user.email}`);
+	successfulResponse(res, null, 200, `email sent to ${user.email}`);
 };
 
 exports.resetPassword = async (req, res) => {

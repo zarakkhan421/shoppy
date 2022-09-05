@@ -54,11 +54,13 @@ const Home = () => {
 	return (
 		<div>
 			<HomeSection
+				key={"featured"}
 				products={featuredProducts}
 				title="Featured Products"
 				count={featuredCount}
 			/>
 			<HomeSection
+				key={"sales"}
 				products={salesProducts}
 				title="Sales Products"
 				count={salesCount}
