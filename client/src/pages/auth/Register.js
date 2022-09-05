@@ -167,7 +167,7 @@ const Register = () => {
 			image: imageBase64,
 		};
 		dispatch(register(data));
-		if (!isSuccess && isLoading) {
+		if (!isSuccess && !isLoading) {
 			toast.error(message);
 		}
 		if (isLoggedIn && !isLoading) {

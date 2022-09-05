@@ -1,4 +1,5 @@
 const express = require("express");
+
 const {
 	refreshAccessToken,
 	register,
@@ -14,6 +15,7 @@ const {
 	deleteUser,
 	getCheckoutDetailsById,
 	getMyProfile,
+	refreshAuth,
 } = require("../controllers/users");
 
 const router = express.Router();
@@ -23,6 +25,7 @@ const { roles } = require("../middleware/roles");
 router.route("/register").post(register);
 router.route("/login").post(login);
 router.route("/logout").get(logout);
+router.route("/refresh-auth").post(refreshAuth);
 router.route("/refresh-access-token").get(refreshAccessToken);
 router.route("/forget-password").post(forgetPassword);
 router.route("/reset-password/:resetToken").post(resetPassword);

@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+// require("dotenv").config();
+
 const initialState = {
 	user: {},
 	accessToken: "",
@@ -12,7 +13,26 @@ const initialState = {
 	error: {},
 	cart: [],
 };
-
+export const refreshAuth = createAsyncThunk(
+	"auth/refreshAuth",
+	async (_, thunkAPI) => {
+		console.log("thunk api");
+		try {
+			const response = await axios.post(
+				"http://localhost:5000/api/user/refresh-auth",
+				{},
+				{
+					withCredentials: true,
+				}
+			);
+			console.log("in refresh auth");
+			console.log(response);
+			return response.data;
+		} catch (error) {
+			return thunkAPI.rejectWithValue(error.response.data);
+		}
+	}
+);
 export const login = createAsyncThunk(
 	"auth/login",
 	async (userData, thunkAPI) => {
@@ -119,6 +139,24 @@ export const counterSlice = createSlice({
 				state.error = {};
 			})
 			.addCase(register.rejected, (state, action) => {
+				state.user = {};
+				state.error = action.payload;
+				state.isLoading = false;
+				state.isSuccess = false;
+				state.message = action.payload.message;
+			})
+			.addCase(refreshAuth.pending, (state) => {
+				state.isLoading = true;
+			})
+			.addCase(refreshAuth.fulfilled, (state, action) => {
+				state.user = action.payload;
+				state.accessToken = action.payload?.serverData?.accessToken;
+				state.isLoading = false;
+				state.isLoggedIn = true;
+				state.isSuccess = true;
+				state.error = {};
+			})
+			.addCase(refreshAuth.rejected, (state, action) => {
 				state.user = {};
 				state.error = action.payload;
 				state.isLoading = false;

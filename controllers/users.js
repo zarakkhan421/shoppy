@@ -101,6 +101,25 @@ exports.login = async (req, res) => {
 	}
 };
 
+exports.refreshAuth = async (req, res) => {
+	try {
+		if (!req.cookies.token) {
+			return failedResponse(res, null, 401, "token not found");
+		}
+		const refreshToken = req.cookies.token;
+		const decodedToken = verifyRefreshToken(res, refreshToken);
+		if (!decodedToken) {
+			return failedResponse(res, null, 403, "invalid token");
+		}
+		const user = await User.findById(decodedToken.id);
+
+		const accessToken = sendAccessToken(decodedToken.id);
+		return successfulResponse(res, { user: sendUserData(user), accessToken });
+	} catch (error) {
+		failedResponse(res, error);
+	}
+};
+
 exports.updatePassword = async (req, res) => {
 	try {
 		const founduser = await User.findById(req.user).select("+password");

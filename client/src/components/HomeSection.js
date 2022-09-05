@@ -11,7 +11,7 @@ const HomeSection = (props) => {
 					{title}
 				</h2>
 				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3">
-					{products.slice(0, 5).map((product) => {
+					{products.slice(0, 8).map((product) => {
 						return (
 							<div className="col-span-1">
 								<Product key={product._id} product={product} />
