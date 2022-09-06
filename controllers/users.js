@@ -186,7 +186,11 @@ exports.updateRole = async (req, res) => {
 		if (email === "zarakkhan421@gmail.com") {
 			return failedResponse(res, null, 400, "you can not change zarak's role");
 		}
-		const user = await User.findOneAndUpdate(email, { role }, { new: true });
+		const user = await User.findOneAndUpdate(
+			{ email },
+			{ role },
+			{ new: true }
+		);
 		successfulResponse(res, { user }, 201, "user role changed");
 	} catch (error) {
 		failedResponse(res, error);

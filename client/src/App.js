@@ -28,6 +28,8 @@ import Logout from "./pages/auth/Logout";
 import ResetPassword from "./pages/auth/ResetPassword";
 import ForgetPassword from "./pages/auth/ForgetPassword";
 import { useEffect } from "react";
+import ChangeRole from "./pages/dashboard/outlets/ChangeRole";
+import ManageUsers from "./pages/dashboard/outlets/ManageUsers";
 function App() {
 	const reduxState = useSelector((state) => state);
 	const dispatch = useDispatch();
@@ -53,6 +55,24 @@ function App() {
 						path="/dashboard"
 						element={<ProtectedRoute Component={Dashboard} />}
 					>
+						<Route
+							path="change-role/:email"
+							element={
+								<ProtectedRoute
+									AllowedRoles={["admin"]}
+									Component={ChangeRole}
+								/>
+							}
+						/>
+						<Route
+							path="manage-users"
+							element={
+								<ProtectedRoute
+									AllowedRoles={["admin"]}
+									Component={ManageUsers}
+								/>
+							}
+						/>
 						{/* products/* */}
 						<Route path="products">
 							<Route

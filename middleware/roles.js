@@ -6,7 +6,7 @@ const roles = (roles) => {
 		return async (req, res, next) => {
 			const user = await User.findById(req.user);
 			if (!roles.includes(user.role)) {
-				failedResponse(res, null, 403, "not authorized for this action");
+				return failedResponse(res, null, 403, "not authorized for this action");
 			} else {
 				next();
 			}

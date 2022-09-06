@@ -102,6 +102,17 @@ const Dashboard = () => {
 					>
 						Reviews
 					</NavLink>
+					<NavLink
+						className={({ isActive }) =>
+							"font-semibold w-full py-2 px-2 mb-1 text-center text-lg  " +
+							(isActive
+								? " bg-primary text-white"
+								: "bg-white text-gray-2 border border-gray-1")
+						}
+						to="manage-users"
+					>
+						Manage Users
+					</NavLink>
 				</div>
 			</div>
 			<div className="w-10/12 table-cell pt-3 pl-5">
