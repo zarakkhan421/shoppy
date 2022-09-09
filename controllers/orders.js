@@ -40,8 +40,15 @@ exports.getOrder = async (req, res) => {
 
 exports.getMyOrders = async (req, res) => {
 	try {
-		const orders = await Order.find({ user: req.user }).sort("-createdAt");
-		successfulResponse(res, { orders });
+		const resultPerPage = 2;
+		const currentPage = req.query.page || 1;
+		const skip = resultPerPage * (currentPage - 1);
+		const count = await Order.find({ user: req.user }).count();
+		const orders = await Order.find({ user: req.user })
+			.sort("-createdAt")
+			.limit(resultPerPage)
+			.skip(skip);
+		successfulResponse(res, { orders, count, resultPerPage });
 	} catch (error) {
 		failedResponse(res, error);
 	}
@@ -49,8 +56,15 @@ exports.getMyOrders = async (req, res) => {
 
 exports.getAllOrders = async (req, res) => {
 	try {
-		const orders = await Order.find().sort("-createdAt");
-		successfulResponse(res, { orders });
+		const resultPerPage = 2;
+		const currentPage = req.query.page || 1;
+		const skip = resultPerPage * (currentPage - 1);
+		const count = await Order.find().count();
+		const orders = await Order.find()
+			.sort("-createdAt")
+			.limit(resultPerPage)
+			.skip(skip);
+		successfulResponse(res, { orders, count, resultPerPage });
 	} catch (error) {
 		failedResponse(res, error);
 	}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
 	getUserId,
@@ -14,7 +14,7 @@ import {
 import validate from "../../utils/validate";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useAxios from "../../hooks/useAxios";
 const Login = () => {
 	const axiosInstance = useAxios();
@@ -25,6 +25,7 @@ const Login = () => {
 	const isSuccess = useSelector(getIsSuccess);
 	const message = useSelector(getMessage);
 	const navigate = useNavigate();
+	const location = useLocation();
 	const [formData, setFormData] = useState({
 		email: "",
 		password: "",
@@ -66,14 +67,15 @@ const Login = () => {
 		if (validateErrors.flat().length > 0) return;
 		dispatch(login(formData));
 		console.log("dispatch login");
-		if (!isSuccess && !isLoading) {
+	};
+	useEffect(() => {
+		if (!isSuccess && !isLoading && message) {
 			toast.error(message);
 		}
 		if (isLoggedIn) {
 			navigate("/");
 		}
-	};
-
+	}, [isLoggedIn]);
 	return (
 		<section>
 			<form onSubmit={submitHandler}>

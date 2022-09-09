@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { reset } from "../../features/userSlice";
+import { getIsLoggedOut, reset } from "../../features/userSlice";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const Logout = () => {
@@ -13,6 +13,7 @@ const Logout = () => {
 			const logout = async () => {
 				const response = await axiosPrivateInstance.get("/user/logout");
 				console.log(response);
+				localStorage.setItem("login", "false");
 				dispatch(reset());
 				navigate("/");
 			};
@@ -22,6 +23,7 @@ const Logout = () => {
 		}
 	}, []);
 	console.log("r");
+	return <></>;
 };
 
 export default Logout;

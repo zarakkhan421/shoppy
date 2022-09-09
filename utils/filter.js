@@ -7,10 +7,6 @@ const filter = (conditions) => {
 		/\b(gt|gte|lt|lte)\b/g,
 		(key) => `$${key}`
 	);
-	console.log(
-		"🚀 ~ file: filter.js ~ line 7 ~ filter ~ conditions",
-		conditions
-	);
 	return JSON.parse(conditions);
 };
 module.exports = { filter };

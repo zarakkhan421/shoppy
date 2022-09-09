@@ -40,7 +40,11 @@ const OrderSection = (props) => {
 						<div className="flex">
 							<div>
 								<img
-									src={orderItem.product.image.url}
+									src={
+										orderItem.product?.image.url
+											? orderItem.product.image.url
+											: ""
+									}
 									className="w-[200px] h-[200px] object-cover"
 									alt=""
 								/>

@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import RenderImage from "../../../components/common/RenderImage";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import validate from "../../../utils/validate";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const EditProduct = () => {
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
@@ -107,7 +109,7 @@ const EditProduct = () => {
 		if (validateErrors.flat().length > 0) {
 			return;
 		}
-		const response = await axiosPrivateInstance.put(`/products/${params.id}`, {
+		const response = axiosPrivateInstance.put(`/products/${params.id}`, {
 			name,
 			description,
 			price,
@@ -117,7 +119,12 @@ const EditProduct = () => {
 			featured,
 			image: imageBase64,
 		});
-		console.log(response);
+		toast.promise(response, {
+			pending: "Editing Product, Please wait...",
+			success: "Product has been EditSed!",
+			error: "Something went wrong!",
+		});
+		console.log(await response);
 	};
 	const handleImage = (e) => {
 		setSelectedImage(e.target.value);
@@ -305,6 +312,17 @@ const EditProduct = () => {
 						</button>
 					</div>
 				</div>
+				<ToastContainer
+					position="bottom-center"
+					autoClose={5000}
+					hideProgressBar={false}
+					newestOnTop={false}
+					closeOnClick
+					rtl={false}
+					pauseOnFocusLoss
+					draggable
+					pauseOnHover
+				/>
 			</form>
 		</section>
 	);

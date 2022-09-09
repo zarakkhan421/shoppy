@@ -1,6 +1,6 @@
 import Nav from "./layouts/NavBar";
 import Home from "./pages/Home";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Dashboard from "./pages/dashboard/Dashboard";
@@ -23,23 +23,29 @@ import MyReviews from "./pages/dashboard/outlets/MyReviews";
 import CreateReview from "./pages/dashboard/outlets/CreateReview";
 import EditReview from "./pages/dashboard/outlets/EditReview";
 import { useDispatch, useSelector } from "react-redux";
-import { refreshAuth } from "./features/userSlice";
+import { refreshAuth, getIsLoggedIn, getIsLoading } from "./features/userSlice";
 import Logout from "./pages/auth/Logout";
 import ResetPassword from "./pages/auth/ResetPassword";
 import ForgetPassword from "./pages/auth/ForgetPassword";
-import { useEffect } from "react";
 import ChangeRole from "./pages/dashboard/outlets/ChangeRole";
 import ManageUsers from "./pages/dashboard/outlets/ManageUsers";
+import { useEffect, useState } from "react";
 function App() {
 	const reduxState = useSelector((state) => state);
+	const isLoggedIn = useSelector(getIsLoggedIn);
+	const isLoading = useSelector(getIsLoading);
 	const dispatch = useDispatch();
-	useEffect(() => {
-		if (!reduxState.auth.accessToken && !reduxState.auth.isLoggedIn) {
-			dispatch(refreshAuth());
-			console.log("dispatch refresh auth in app");
-		}
-		console.log(reduxState);
-	}, []);
+	const navigate = useNavigate();
+	const location = useLocation();
+	console.log(location);
+	if (
+		!reduxState.auth.accessToken &&
+		!reduxState.auth.isLoggedIn &&
+		localStorage.getItem("login") === "true"
+	) {
+		dispatch(refreshAuth());
+	}
+
 	return (
 		<div>
 			<Nav />
@@ -160,7 +166,7 @@ function App() {
 					<Route path="/login" element={<Login />} />
 					<Route path="/register" element={<Register />} />
 					<Route path="/shop" element={<Shop />} />
-					<Route path="logout" element={<Logout />} />
+					<Route path="/logout" element={<Logout />} />
 					<Route
 						path="reset-password/:reset_token"
 						element={<ResetPassword />}

@@ -10,7 +10,12 @@ const { verifyRefreshToken } = require("../utils/verifyRefreshToken");
 const crypto = require("crypto");
 const { sendMail } = require("../utils/sendMail");
 const sendUserData = require("../utils/sendUserData");
-const { cloudinary, uploadImage, updateImage } = require("../utils/cloudinary");
+const {
+	cloudinary,
+	uploadImage,
+	updateImage,
+	deleteImage,
+} = require("../utils/cloudinary");
 const ejs = require("ejs");
 const path = require("path");
 exports.register = async (req, res) => {
@@ -102,6 +107,7 @@ exports.login = async (req, res) => {
 };
 
 exports.refreshAuth = async (req, res) => {
+	console.log("ooo");
 	try {
 		if (!req.cookies.token) {
 			return failedResponse(res, null, 401, "token not found");
@@ -184,14 +190,14 @@ exports.updateRole = async (req, res) => {
 	try {
 		const { role, email } = req.body;
 		if (email === "zarakkhan421@gmail.com") {
-			return failedResponse(res, null, 400, "you can not change zarak's role");
+			return failedResponse(res, null, 400, "You can not change zarak's role");
 		}
 		const user = await User.findOneAndUpdate(
 			{ email },
 			{ role },
 			{ new: true }
 		);
-		successfulResponse(res, { user }, 201, "user role changed");
+		successfulResponse(res, { user }, 201, "User role changed");
 	} catch (error) {
 		failedResponse(res, error);
 	}
@@ -241,8 +247,10 @@ exports.getCheckoutDetailsById = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
 	try {
+		const findUser = await User.findById(req.params.id);
+		await deleteImage(findUser.image.id);
 		const user = await User.findByIdAndDelete(req.params.id);
-		successfulResponse(res, { user }, 200, "user deleted");
+		successfulResponse(res, { user }, 200, "User Deleted");
 	} catch (error) {
 		failedResponse(res, error);
 	}
@@ -265,15 +273,9 @@ exports.refreshAccessToken = async (req, res) => {
 
 exports.logout = async (req, res) => {
 	console.log("eeee");
-	if (!req.cookies.token) {
-		return successfulResponse(res, null);
-	}
-	// if cookie is found then search database based on email and clear it
-	const refreshToken = req.cookies.token;
-	if (refreshToken) {
-		res.clearCookie("token", { httpOnly: true });
-		successfulResponse(res, null);
-	}
+	console.log("my", req.cookies.token);
+	res.clearCookie("token", cookieOptions);
+	return successfulResponse(res, null, 200, "loggedout");
 };
 
 exports.forgetPassword = async (req, res) => {

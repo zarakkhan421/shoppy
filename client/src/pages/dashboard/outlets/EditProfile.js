@@ -4,7 +4,8 @@ import RenderImage from "../../../components/common/RenderImage";
 import { getUserId } from "../../../features/userSlice";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import validate from "../../../utils/validate";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const EditProfile = () => {
 	const axiosPrivateInstance = useAxiosPrivate();
 	// image
@@ -194,8 +195,13 @@ const EditProfile = () => {
 			image: imageBase64,
 		};
 		try {
-			const response = await axiosPrivateInstance.put("/user", data);
-			console.log(response);
+			const response = axiosPrivateInstance.put("/user", data);
+			toast.promise(response, {
+				pending: "Editing Profile, Please wait...",
+				success: "Profile has been Edited!",
+				error: "Something went wrong!",
+			});
+			console.log(await response);
 		} catch (error) {
 			console.log(error);
 		}
@@ -487,6 +493,17 @@ const EditProfile = () => {
 						</button>
 					</div>
 				</div>
+				<ToastContainer
+					position="bottom-center"
+					autoClose={5000}
+					hideProgressBar={false}
+					newestOnTop={false}
+					closeOnClick
+					rtl={false}
+					pauseOnFocusLoss
+					draggable
+					pauseOnHover
+				/>
 			</form>
 		</div>
 	);

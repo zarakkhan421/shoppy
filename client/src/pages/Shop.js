@@ -8,21 +8,33 @@ let priceChanged = false;
 const Shop = () => {
 	const axiosInstance = useAxios();
 	const [products, setProducts] = useState([]);
-
+	const [page, setPage] = useState(1);
 	const [minPrice, setMinPrice] = useState(0);
 	const [maxPrice, setMaxPrice] = useState(10000);
 	const [ratings, setRatings] = useState(0);
+	const [count, setCount] = useState(0);
+	const [resultPerPage, setResultPerPage] = useState(0);
+	const [noOfPages, setNoOfPages] = useState(0);
+	console.log(noOfPages);
 	const [openRating, setOpenRating] = useState(false);
 	console.log(ratings);
 	const getProducts = async () => {
 		try {
 			const response = await axiosInstance.get(
-				`/products?price[gte]=${Number(minPrice)}&price[lte]=${Number(
-					maxPrice
-				)}&ratings=${Number(ratings)}`
+				`/products?page=${page}&price[gte]=${Number(
+					minPrice
+				)}&price[lte]=${Number(maxPrice)}&ratings=${Number(ratings)}`
 			);
 			console.log(response);
+			// setCount(response.data.serverData.count);
+			// setResultPerPage(response.data.serverData.resultPerPage);
 			setProducts(response.data.serverData.products);
+			setNoOfPages(
+				Math.ceil(
+					response.data.serverData.count /
+						response.data.serverData.resultPerPage
+				)
+			);
 			if (!priceChanged) {
 				setMaxPrice(response.data.serverData.maxProductPrice);
 			}
@@ -32,7 +44,7 @@ const Shop = () => {
 	};
 	useEffect(() => {
 		getProducts();
-	}, [minPrice, maxPrice, ratings]);
+	}, [minPrice, maxPrice, ratings, page]);
 
 	const onChangePrice = (e) => {
 		console.log(e.target.name);
@@ -226,6 +238,35 @@ const Shop = () => {
 						);
 					})}
 				</div>
+			</div>
+			<div className="flex justify-center mt-8 w-full">
+				<button
+					className="text-blue-500 disabled:text-slate-400 mr-2"
+					disabled={page === 1}
+					onClick={() => setPage((page) => page - 1)}
+				>
+					Previous
+				</button>
+				{[...Array(noOfPages)].map((_, i) => {
+					return (
+						<button
+							key={i}
+							className={`mr-2 px-2 py-1 rounded-sm ${
+								page === i + 1 ? "bg-primary text-white" : ""
+							} text-gray-1`}
+							onClick={(e) => setPage(i + 1)}
+						>
+							{i + 1}
+						</button>
+					);
+				})}
+				<button
+					className="text-blue-500 disabled:text-slate-400"
+					onClick={() => setPage((page) => page + 1)}
+					disabled={page === noOfPages}
+				>
+					Next
+				</button>
 			</div>
 		</div>
 	);

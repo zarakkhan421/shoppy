@@ -99,7 +99,7 @@ const CreateProduct = () => {
 			toast.promise(response, {
 				pending: "Creating Product, Please wait...",
 				success: "Product has been Created!",
-				error: "something went wrong!",
+				error: "Something went wrong!",
 			});
 			console.log(await response);
 			setIsLoading(false);

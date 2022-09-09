@@ -4,7 +4,11 @@ const { failedResponse } = require("../utils/failedResponse");
 const { filter } = require("../utils/filter");
 const { successfulResponse } = require("../utils/successfulResponse");
 const _ = require("lodash");
-const { uploadImage, updateImage } = require("../utils/cloudinary");
+const {
+	uploadImage,
+	updateImage,
+	deleteImage,
+} = require("../utils/cloudinary");
 
 exports.getProduct = async (req, res) => {
 	try {
@@ -19,15 +23,16 @@ exports.getProduct = async (req, res) => {
 exports.getProducts = async (req, res) => {
 	try {
 		console.log("sfd");
-		const resultPerpage = 30;
+		const resultPerPage = 15;
 		const currentPage = req.query.page || 1;
-		const skip = resultPerpage * (currentPage - 1);
+		const skip = resultPerPage * (currentPage - 1);
 		// Math.ceil can be used on front end for number of pages on frontend
 		const maxProductPrice = await Product.find().sort({ price: -1 }).limit(1);
 		const ratings = req.query.ratings ? req.query.ratings : 0;
 
 		// reason for not doing if statement price and not for ratings is that for price max price had to be know prior and may required extra database query
 		if (req.query.price) {
+			console.log("reqprive");
 			let conditions = filter(req.query.price);
 			const count = await Product.where({
 				price: conditions,
@@ -36,13 +41,14 @@ exports.getProducts = async (req, res) => {
 
 			const products = await Product.find()
 				.where({ price: conditions, ratings: { $gte: ratings } })
-				.limit(resultPerpage)
+				.limit(resultPerPage)
 				.skip(skip);
-			console.log(products, count);
+
 			return successfulResponse(res, {
 				count,
 				maxProductPrice: maxProductPrice[0].price,
 				products,
+				resultPerPage,
 			});
 		}
 
@@ -52,9 +58,14 @@ exports.getProducts = async (req, res) => {
 
 		const products = await Product.find()
 			.where({ ratings: { $gte: ratings } })
-			.limit(resultPerpage)
+			.limit(resultPerPage)
 			.skip(skip);
-		return successfulResponse(res, { count, maxProductPrice, products });
+		return successfulResponse(res, {
+			count,
+			maxProductPrice: maxProductPrice[0].price,
+			products,
+			resultPerPage,
+		});
 	} catch (error) {
 		failedResponse(res, error);
 	}
@@ -119,6 +130,8 @@ exports.createProduct = async (req, res) => {
 
 exports.deleteProduct = async (req, res) => {
 	try {
+		const findProduct = await Product.findById(req.params.id);
+		await deleteImage(findProduct.image.id);
 		const product = await Product.findByIdAndRemove(req.params.id);
 		successfulResponse(res, product, 200, "deleted product");
 	} catch (error) {
@@ -131,8 +144,6 @@ exports.updateProduct = async (req, res) => {
 		const onDbExists = await Product.findById(req.params.id);
 
 		const image = req.body.image;
-		console.log("fddf");
-		// console.log(req.body.image);
 		const { cloudinaryResponse, imageResponse } = await updateImage(
 			image,
 			onDbExists
@@ -162,58 +173,3 @@ exports.updateProduct = async (req, res) => {
 		failedResponse(res, error);
 	}
 };
-
-// exports.reviewProduct = async (req, res) => {
-// 	try {
-// 		const product = await Product.findById(req.params.id);
-// 		const reviewExist =
-// 			product.reviews.filter((review) => String(review.user) === req.user)
-// 				.length > 0;
-// 		if (reviewExist || product.reviews.length !== 0) {
-// 			return failedResponse(res, null, 400, "review already exists");
-// 		}
-// 		console.log(req.params);
-// 		const review = await Product.findByIdAndUpdate(
-// 			req.params.id,
-// 			{
-// 				$push: {
-// 					reviews: {
-// 						user: req.user,
-// 						product: req.params.product,
-// 						order: req.body.order,
-// 						rating: req.body.rating,
-// 						comment: req.body.comment,
-// 					},
-// 				},
-// 			},
-// 			{
-// 				new: true,
-// 			}
-// 		);
-// 		return successfulResponse(res, review);
-// 	} catch (error) {
-// 		console.log(error);
-// 	}
-// };
-
-// exports.getAllReviews = async (req, res) => {
-// 	try {
-// 		const products = await Product.find()
-// 			.populate("reviews.user")
-// 			.populate("reviews.order");
-// 		let reviews = products
-// 			.map((product) => ({
-// 				productName: product.name,
-// 				reviews: product.reviews,
-// 			}))
-// 			.map((review) => ({
-// 				name: review.productName,
-// 				review: review.reviews,
-// 			}))
-// 			.filter((review) => review.length !== 0)
-// 			.flat();
-// 		successfulResponse(res, { reviews });
-// 	} catch (error) {
-// 		failedResponse(res, error);
-// 	}
-// };

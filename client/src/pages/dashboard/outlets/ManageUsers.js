@@ -13,7 +13,19 @@ const ManageUsers = () => {
 		};
 		getUsers();
 	}, []);
-	const deleteUser = () => {};
+	const deleteUser = async (e) => {
+		e.preventDefault();
+		try {
+			console.log(e.target.userId.value);
+			const response = await axiosPrivateInstance.delete(
+				`/user/${e.target.userId.value}`
+			);
+			console.log(response);
+			setUsers(users.filter((user) => user._id !== e.target.userId.value));
+		} catch (error) {
+			console.log(error);
+		}
+	};
 	return (
 		<div>
 			<h2 className="text-4xl font-bold my-2 w-full">Manage Users</h2>
@@ -23,6 +35,7 @@ const ManageUsers = () => {
 					<tr className="bg-primary">
 						<th className="border text-white font-semibold">Name</th>
 						<th className="border text-white font-semibold">Image</th>
+						<th className="border text-white font-semibold">Role</th>
 						<th className="border text-white font-semibold">Actions</th>
 					</tr>
 				</thead>
@@ -42,7 +55,9 @@ const ManageUsers = () => {
 												alt=""
 											/>
 										</td>
-
+										<td className="border text-center">
+											{user.role[0].toUpperCase() + user.role.slice(1)}
+										</td>
 										<td className="border text-center">
 											<div className="flex justify-center">
 												<Link
@@ -55,11 +70,7 @@ const ManageUsers = () => {
 													onSubmit={deleteUser}
 													className="text-red-400 mx-1"
 												>
-													<input
-														type="hidden"
-														name="productId"
-														value={user._id}
-													/>
+													<input type="hidden" name="userId" value={user._id} />
 													<button type="submit">Delete</button>
 												</form>
 											</div>

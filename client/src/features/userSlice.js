@@ -49,7 +49,9 @@ export const login = createAsyncThunk(
 				success: "LoggedIn",
 			});
 			const resolved = await response;
-
+			if (resolved.data.success) {
+				localStorage.setItem("login", "true");
+			}
 			console.log("response login", await response);
 			return resolved.data;
 		} catch (error) {
@@ -74,6 +76,9 @@ export const register = createAsyncThunk(
 				success: "You have registered!",
 			});
 			const resolved = await response;
+			if (resolved.data.success) {
+				localStorage.setItem("login", "true");
+			}
 			console.log("response register", await response);
 			return resolved.data;
 		} catch (error) {

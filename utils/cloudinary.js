@@ -1,5 +1,3 @@
-const { failedResponse } = require("./failedResponse");
-
 require("dotenv").config();
 const cloudinary = require("cloudinary").v2;
 cloudinary.config({
@@ -10,12 +8,10 @@ cloudinary.config({
 
 const uploadImage = async (image) => {
 	try {
-		console.log("fdfdrr4");
 		const cloudinaryResponse = await cloudinary.uploader.upload(image, {
 			upload_preset: "shoppy",
 			allowed_formats: ["jpeg", "jpg", "png"],
 		});
-		console.log("sdds", cloudinaryResponse);
 		return {
 			cloudinaryResponse,
 			imageResponse: {

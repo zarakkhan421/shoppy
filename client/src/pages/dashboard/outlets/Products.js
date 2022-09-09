@@ -6,23 +6,29 @@ const Products = () => {
 	const axiosPrivateInstance = useAxiosPrivate();
 	const [products, setProducts] = useState();
 	let [productCount, setProductCount] = useState();
+	const [noOfPages, setNoOfPages] = useState(0);
+	const [page, setPage] = useState(1);
 
-	const [productsError, setProductsError] = useState();
-	const [deleteProductError, setProductError] = useState();
 	const getProducts = async () => {
 		try {
 			console.log("fv");
-			const response = await axiosPrivateInstance.get("/products");
+			const response = await axiosPrivateInstance.get(`/products?page=${page}`);
 			setProducts(response.data.serverData.products);
 			setProductCount(Number(response.data.serverData.count));
+			setNoOfPages(
+				Math.ceil(
+					response.data.serverData.count /
+						response.data.serverData.resultPerPage
+				)
+			);
 			console.log(response);
 		} catch (error) {
-			setProductsError(error);
+			console.log(error);
 		}
 	};
 	useEffect(() => {
 		getProducts();
-	}, []);
+	}, [page]);
 
 	const deleteProduct = async (e) => {
 		e.preventDefault();
@@ -37,7 +43,7 @@ const Products = () => {
 			setProductCount((productCount -= 1));
 			setProducts(newProducts);
 		} catch (error) {
-			setProductError(error);
+			console.log(error);
 		}
 	};
 	return (
@@ -105,6 +111,35 @@ const Products = () => {
 						})}
 				</tbody>
 			</table>
+			<div className="flex justify-center mt-8 w-full">
+				<button
+					className="text-blue-500 disabled:text-slate-400 mr-2"
+					disabled={page === 1}
+					onClick={() => setPage((page) => page - 1)}
+				>
+					Previous
+				</button>
+				{[...Array(noOfPages)].map((_, i) => {
+					return (
+						<button
+							key={i}
+							className={`mr-2 px-2 py-1 rounded-sm ${
+								page === i + 1 ? "bg-primary text-white" : ""
+							} text-gray-1`}
+							onClick={(e) => setPage(i + 1)}
+						>
+							{i + 1}
+						</button>
+					);
+				})}
+				<button
+					className="text-blue-500 disabled:text-slate-400"
+					onClick={() => setPage((page) => page + 1)}
+					disabled={page === noOfPages}
+				>
+					Next
+				</button>
+			</div>
 		</div>
 	);
 };

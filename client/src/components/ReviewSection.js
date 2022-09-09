@@ -28,7 +28,9 @@ const ReviewSection = (props) => {
 						className="flex bg-slate-50 px-2 py-5 rounded mb-3 shadow-sm hover:shadow"
 					>
 						<div className="flex flex-col mr-4">
-							<div className="text-2xl font-medium">{review.product.name}</div>
+							<div className="text-2xl font-medium">
+								{review.product?.name && "no longer exist"}
+							</div>
 							<div className="font-semibold text-sm">
 								{moment(review.createdAt).format("ll")}
 							</div>

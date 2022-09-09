@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const ChangeRole = () => {
 	const [role, setRole] = useState("");
 	const { email } = useParams();
@@ -10,12 +11,18 @@ const ChangeRole = () => {
 	const roleHandler = async (e) => {
 		e.preventDefault();
 		try {
-			const response = await axiosPrivateInstance.put("/user/update-role", {
+			const response = axiosPrivateInstance.put("/user/update-role", {
 				role,
 				email,
 			});
-			console.log(response);
+			toast.promise(response, {
+				pending: "Changing role, Please wait...",
+				success: "Role has been changed!",
+			});
+
+			console.log(await response);
 		} catch (error) {
+			toast.error(error.response.data.message);
 			console.log(error);
 		}
 	};
@@ -47,6 +54,17 @@ const ChangeRole = () => {
 					Change Status
 				</button>
 			</form>
+			<ToastContainer
+				position="bottom-center"
+				autoClose={5000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+			/>
 		</div>
 	);
 };
