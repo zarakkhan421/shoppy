@@ -52,7 +52,7 @@ const Home = () => {
 	}, []);
 
 	return (
-		<div>
+		<div className=" min-h-[60vh]">
 			<HomeSection
 				key={"featured"}
 				products={featuredProducts}
@@ -64,8 +64,8 @@ const Home = () => {
 				products={salesProducts}
 				title="Sales Products"
 				count={salesCount}
+				classes="mt-6"
 			/>
-			{isAdmin && "isadmin"} {isEditorAdmin && "isadmineditor"}
 		</div>
 	);
 };

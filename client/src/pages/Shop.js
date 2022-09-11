@@ -63,8 +63,8 @@ const Shop = () => {
 	};
 
 	return (
-		<div className="flex flex-col">
-			<div className="flex flex-wrap my-2">
+		<div className="flex flex-col min-h-[60vh]">
+			<div className="flex flex-wrap my-2 mb-4">
 				<div className="flex mr-2 items-center">
 					<label htmlFor="" className="text-lg mr-1">
 						Min Value
@@ -253,7 +253,7 @@ const Shop = () => {
 							key={i}
 							className={`mr-2 px-2 py-1 rounded-sm ${
 								page === i + 1 ? "bg-primary text-white" : ""
-							} text-gray-1`}
+							} `}
 							onClick={(e) => setPage(i + 1)}
 						>
 							{i + 1}

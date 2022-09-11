@@ -121,7 +121,7 @@ const EditProduct = () => {
 		});
 		toast.promise(response, {
 			pending: "Editing Product, Please wait...",
-			success: "Product has been EditSed!",
+			success: "Product has been Edited!",
 			error: "Something went wrong!",
 		});
 		console.log(await response);

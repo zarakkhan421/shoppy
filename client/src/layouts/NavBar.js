@@ -14,7 +14,7 @@ const NavBar = () => {
 	console.log(cart);
 	const [isOpen, setIsOpen] = useState(false);
 	return (
-		<nav>
+		<nav className="mb-6">
 			{/* below :lg should have different navbar */}
 			<div className=" container mx-auto nav-bar hidden lg:flex justify-between items-center w-full h-[4.5vh]">
 				<div className="flex w-1/4 xl:w-2/5">
@@ -30,9 +30,11 @@ const NavBar = () => {
 						<Link to="shop" className="font-bold text-gray-1">
 							Shop
 						</Link>
-						<Link to="dashboard" className="font-bold text-gray-1">
-							Dashboard
-						</Link>
+						{isLoggedIn && (
+							<Link to="dashboard" className="font-bold text-gray-1">
+								Dashboard
+							</Link>
+						)}
 					</div>
 					<div
 						className={`flex w-5/12 2xl:w-6/12 justify-around ${

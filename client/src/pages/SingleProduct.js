@@ -114,35 +114,56 @@ const SingleProduct = () => {
 	return (
 		<div className="flex justify-between mt-2">
 			<div className="w-2/3">
-				<h1>{product.name}</h1>
+				<h1 className="font-bold text-2xl">{product.name}</h1>
+
 				<div className="flex items-center">
 					<div className="flex items-center mr-2">
 						<div>
 							<Rating initialValue={1} iconsCount={1} readonly size={25} />
 						</div>
-						<div>({product.ratings})</div>
+						<div>({reviews.length > 0 ? product.ratings.toFixed(2) : "0"})</div>
 					</div>
 					<div>{product.reviews} Reviews</div>
 				</div>
 				<div>
 					<img
 						src={product.image?.url}
-						className="w-[500px] h-[500px] object-cover"
+						className="w-[500px] h-[500px] object-contain"
 						alt=""
 					/>
 				</div>
-				<div>$ {product.price}</div>
+				<div className="flex">
+					{product.sale > 0 ? (
+						<>
+							<div className="mr-2 font-semibold">
+								Price $
+								{(product.price - (product.sale * product.price) / 100).toFixed(
+									2
+								)}
+							</div>
+							<div className="mr-2 line-through font-semibold">
+								$ {product.price}
+							</div>
+						</>
+					) : (
+						<div className="font-semibold">${product.price}</div>
+					)}
+				</div>
 				<div>
-					<h3>Product Description</h3>
+					<h3 className="font-semibold text-2xl">Product Description</h3>
 					<p>{product.description}</p>
 				</div>
 				<div>
-					<h3>Ratings and Reviews</h3>
-					<h4>Ratings</h4>
+					<h3 className="text-2xl font-semibold">Ratings and Reviews</h3>
+					<h4 className="font-xl font-semibold">Ratings</h4>
 					<div>
-						<div>{product.ratings}/5</div>
+						<div>{reviews.length > 0 ? product.ratings.toFixed(2) : "0"}/5</div>
 						<div>
-							<Rating readonly iconsCount={5} initialValue={product.ratings} />
+							<Rating
+								readonly
+								iconsCount={5}
+								initialValue={reviews.length > 0 ? product.ratings : "0"}
+							/>
 						</div>
 						<div>
 							<div className="flex items-center">

@@ -22,18 +22,24 @@ const Product = (props) => {
 							</div>
 						)}
 					</div>
-					<div> {product.name}</div>
+					<div className="min-w-full h-[20px] overflow-hidden">
+						{product.name.trim()}...
+					</div>
 					<div className="flex">
 						<div className="flex">
 							{product.sale > 0 ? (
 								<>
 									<div className="mr-2">
-										${product.price - (product.sale * product.price) / 100}
+										$
+										{(
+											product.price -
+											(product.sale * product.price) / 100
+										).toFixed(2)}
 									</div>
 									<div className="mr-2 line-through">${product.price}</div>
 								</>
 							) : (
-								<div>${product.price}</div>
+								<div className="mr-2">${product.price}</div>
 							)}
 						</div>
 

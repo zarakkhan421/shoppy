@@ -1,4 +1,5 @@
 import Nav from "./layouts/NavBar";
+import Footer from "./layouts/Footer";
 import Home from "./pages/Home";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Login from "./pages/auth/Login";
@@ -38,6 +39,10 @@ function App() {
 	const navigate = useNavigate();
 	const location = useLocation();
 	console.log(location);
+	if (localStorage.getItem("login")) {
+		console.log("not set");
+		localStorage.setItem("login", "false");
+	}
 	if (
 		!reduxState.auth.accessToken &&
 		!reduxState.auth.isLoggedIn &&
@@ -175,6 +180,7 @@ function App() {
 					<Route exact path="/" element={<Home />} />
 				</Routes>
 			</div>
+			<Footer />
 		</div>
 	);
 }

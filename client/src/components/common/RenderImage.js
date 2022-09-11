@@ -21,7 +21,7 @@ const RenderImage = (props) => {
 			<img
 				src={imageSrc}
 				alt="img"
-				style={{ width: "250px", height: "auto" }}
+				style={{ width: "250px", height: "250px", objectFit: "scale-down" }}
 				onError={(e) => (e.currentTarget.src = avatar2)}
 			/>
 		</div>

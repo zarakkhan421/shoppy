@@ -23,7 +23,7 @@ exports.getProduct = async (req, res) => {
 exports.getProducts = async (req, res) => {
 	try {
 		console.log("sfd");
-		const resultPerPage = 15;
+		const resultPerPage = 16;
 		const currentPage = req.query.page || 1;
 		const skip = resultPerPage * (currentPage - 1);
 		// Math.ceil can be used on front end for number of pages on frontend

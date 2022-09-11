@@ -8,7 +8,7 @@ const {
 
 exports.createReview = async (req, res) => {
 	try {
-		const { comment, rating } = req.body;
+		const { comment, rating, productName, reviewerName } = req.body;
 		const { product } = req.params;
 		console.log(req.body);
 		console.log("de", req.params.product);
@@ -25,6 +25,8 @@ exports.createReview = async (req, res) => {
 				comment,
 				rating,
 				product,
+				productName,
+				reviewerName,
 				user: req.user,
 			});
 			// update ratings in product doc

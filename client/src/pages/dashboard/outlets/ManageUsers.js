@@ -51,7 +51,7 @@ const ManageUsers = () => {
 										<td className="border text-center flex justify-center">
 											<img
 												src={user.image.url}
-												className="h-10 w-10 p-auto text-center"
+												className="h-10 w-10 p-auto text-center object-scale-down"
 												alt=""
 											/>
 										</td>

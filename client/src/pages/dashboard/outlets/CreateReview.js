@@ -4,7 +4,10 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import moment from "moment";
 import { Rating } from "react-simple-star-rating";
 import validate from "../../../utils/validate";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useSelector } from "react-redux";
+import { getFirstName, getLastName } from "../../../features/userSlice";
 // reviews will created based on order _id it and orderitem _id generated in array, so that only ordered products will be reviewed
 const CreateReview = () => {
 	const params = useParams();
@@ -14,6 +17,8 @@ const CreateReview = () => {
 	const [orderItem, setOrderItem] = useState({});
 	const [rating, setRating] = useState(0);
 	const [comment, setComment] = useState("");
+	const firstName = useSelector(getFirstName);
+	const lastName = useSelector(getLastName);
 	//error
 	const [commentErrors, setCommentErrors] = useState([]);
 	const [ratingErrors, setRatingErrors] = useState([]);
@@ -62,17 +67,24 @@ const CreateReview = () => {
 			return;
 		}
 		const data = {
+			productName: orderItem.name,
+			reviewerName: firstName + " " + lastName,
 			comment,
 			rating,
 		};
 		try {
-			const response = await axiosPrivateInstance.post(
-				`/reviews/${orderItem.product}`,
+			const response = axiosPrivateInstance.post(
+				`/reviews/${orderItem.product._id}`,
 				data
 			);
-			console.log(response);
+			toast.promise(response, {
+				pending: "Creating review, Please wait...",
+				success: "Review has been Created!",
+			});
+			const resolved = await response;
 		} catch (error) {
 			console.log(error);
+			toast.error(error.response.data.message);
 		}
 	};
 
@@ -145,6 +157,17 @@ const CreateReview = () => {
 					</button>
 				</form>
 			</div>
+			<ToastContainer
+				position="bottom-center"
+				autoClose={5000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+			/>
 		</div>
 	);
 };

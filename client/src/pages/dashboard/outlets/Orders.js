@@ -48,7 +48,7 @@ const AllOrders = () => {
 							key={i}
 							className={`mr-2 px-2 py-1 rounded-sm ${
 								page === i + 1 ? "bg-primary text-white" : ""
-							} text-gray-1`}
+							}`}
 							onClick={(e) => setPage(i + 1)}
 						>
 							{i + 1}

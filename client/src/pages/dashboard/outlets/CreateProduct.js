@@ -3,6 +3,7 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import validate from "../../../utils/validate";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import RenderImage from "../../../components/common/RenderImage";
 
 const CreateProduct = () => {
 	const [name, setName] = useState("");
@@ -261,11 +262,7 @@ const CreateProduct = () => {
 					</div>
 					<div className="col-span-2 w-full">
 						{imageBase64.length > 0 && (
-							<img
-								src={imageBase64}
-								alt="avatar"
-								style={{ width: "500px", height: "auto" }}
-							/>
+							<RenderImage image={image} imageBase64={imageBase64} />
 						)}
 					</div>
 					<div className="col-span-2 w-full flex flex-col">
