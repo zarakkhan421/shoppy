@@ -31,6 +31,13 @@ const reviews = require("./routes/reviews");
 const orderItems = require("./routes/orderItems");
 const User = require("./models/users");
 
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static("client/build"));
+	app.get("*", (req, res) => {
+		res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+	});
+}
+
 app.use("/api/products", products);
 app.use("/api/user", user);
 app.use("/api/orders", orders);
@@ -98,4 +105,6 @@ app.get("/get-all-images", async (req, res) => {
 	res.json({ images, usersImages });
 });
 
-app.listen(PORT, () => console.log(`server running on ${PORT}`));
+app.listen(process.env.PORT || 5000, () =>
+	console.log(`server running on ${process.env.PORT}`)
+);
