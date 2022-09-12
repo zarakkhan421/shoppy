@@ -167,10 +167,10 @@ const Register = () => {
 			image: imageBase64,
 		};
 		dispatch(register(data));
-		if (!isSuccess && !isLoading) {
+		if (!isSuccess && !isLoading && isLoggedIn) {
 			toast.error(message);
 		}
-		if (isLoggedIn && !isLoading) {
+		if (isLoggedIn) {
 			navigate("/");
 		}
 	};
@@ -452,7 +452,11 @@ const Register = () => {
 							<img
 								src={imageBase64}
 								alt="avatar"
-								style={{ width: "500px", height: "auto" }}
+								style={{
+									width: "500px",
+									height: "500px",
+									objectFit: "scale-down",
+								}}
 							/>
 						)}
 					</div>

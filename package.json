@@ -8,6 +8,7 @@
 		"start": "node server",
 		"server": "nodemon server.js",
 		"client": "npm start --prefix client",
+		"deploy": "npm install && npm  --prefix client install && npm run --prefix client build",
 		"dev": "concurrently \"npm run server\" \"npm run client\""
 	},
 	"keywords": [],

@@ -25,7 +25,7 @@ const Checkout = () => {
 
 	const [homeAddressRadio, setHomeAddressRadio] = useState(false);
 	const [shippingAddressRadio, setShippingAddressRadio] = useState(false);
-	const [newAddressRadio, setNewAddressRadio] = useState(false);
+	const [newAddressRadio, setNewAddressRadio] = useState(true);
 
 	const [updateAddressesCheck, setUpdateAddressesCheck] = useState(false);
 

@@ -287,14 +287,15 @@ exports.forgetPassword = async (req, res) => {
 
 	const resetLink = `${process.env.CLIENT_URL}/reset-password/${unHashedToken}`;
 	// const message = `Click this link ${resetLink} to reset your password`;
-	const html = await ejs.renderFile(
-		path.join(__dirname, "../templates/forgetPasswordEmail.ejs"),
-		{ resetLink, user: sendUserData(foundUser) }
-	);
+	// const html = await ejs.renderFile(
+	// 	path.join(__dirname, "../templates/forgetPasswordEmail.ejs"),
+	// 	{ resetLink, user: sendUserData(foundUser) }
+	// );
 	await sendMail({
 		email: foundUser.email,
 		subject: "Reset Password",
-		template: html,
+		template: "forgetPasswordEmail",
+		templateData: { resetLink, user: sendUserData(foundUser) },
 	});
 	const hashedToken = crypto
 		.createHash("sha256")

@@ -39,7 +39,7 @@ function App() {
 	const navigate = useNavigate();
 	const location = useLocation();
 	console.log(location);
-	if (localStorage.getItem("login")) {
+	if (!localStorage.getItem("login")) {
 		console.log("not set");
 		localStorage.setItem("login", "false");
 	}

@@ -39,12 +39,13 @@ const Product = (props) => {
 									<div className="mr-2 line-through">${product.price}</div>
 								</>
 							) : (
-								<div className="mr-2">${product.price}</div>
+								<div className="mr-2">${product.price.toFixed(2)}</div>
 							)}
 						</div>
 
 						<div className="flex mr-2">
-							<AiFillStar className="text-red-500 mt-1" />({product.ratings})
+							<AiFillStar className="text-red-500 mt-1" />(
+							{product.ratings.toFixed(2)})
 						</div>
 						<div>{product.reviews} Reviews</div>
 					</div>

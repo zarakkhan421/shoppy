@@ -36,17 +36,19 @@ const Dashboard = () => {
 					>
 						Products
 					</NavLink>
-					<NavLink
-						className={({ isActive }) =>
-							"font-semibold w-full py-2 px-2 mb-1 text-center text-lg  " +
-							(isActive
-								? " bg-primary text-white"
-								: "bg-white text-gray-2 border border-gray-1")
-						}
-						to="products/create"
-					>
-						Create Product
-					</NavLink>
+					{isAdmin && (
+						<NavLink
+							className={({ isActive }) =>
+								"font-semibold w-full py-2 px-2 mb-1 text-center text-lg  " +
+								(isActive
+									? " bg-primary text-white"
+									: "bg-white text-gray-2 border border-gray-1")
+							}
+							to="products/create"
+						>
+							Create Product
+						</NavLink>
+					)}
 					<NavLink
 						className={({ isActive }) =>
 							"font-semibold w-full py-2 px-2 mb-1 text-center text-lg  " +
@@ -69,17 +71,19 @@ const Dashboard = () => {
 					>
 						My Orders
 					</NavLink>
-					<NavLink
-						className={({ isActive }) =>
-							"font-semibold w-full py-2 px-2 mb-1 text-center text-lg  " +
-							(isActive
-								? " bg-primary text-white"
-								: "bg-white text-gray-2 border border-gray-1")
-						}
-						to="orders/all"
-					>
-						Orders
-					</NavLink>
+					{isEditorAdmin && (
+						<NavLink
+							className={({ isActive }) =>
+								"font-semibold w-full py-2 px-2 mb-1 text-center text-lg  " +
+								(isActive
+									? " bg-primary text-white"
+									: "bg-white text-gray-2 border border-gray-1")
+							}
+							to="orders/all"
+						>
+							Orders
+						</NavLink>
+					)}
 					<NavLink
 						className={({ isActive }) =>
 							"font-semibold w-full py-2 px-2 mb-1 text-center text-lg  " +
@@ -91,28 +95,32 @@ const Dashboard = () => {
 					>
 						My Reviews
 					</NavLink>
-					<NavLink
-						className={({ isActive }) =>
-							"font-semibold w-full py-2 px-2 mb-1 text-center text-lg  " +
-							(isActive
-								? " bg-primary text-white"
-								: "bg-white text-gray-2 border border-gray-1")
-						}
-						to="reviews/all"
-					>
-						Reviews
-					</NavLink>
-					<NavLink
-						className={({ isActive }) =>
-							"font-semibold w-full py-2 px-2 mb-1 text-center text-lg  " +
-							(isActive
-								? " bg-primary text-white"
-								: "bg-white text-gray-2 border border-gray-1")
-						}
-						to="manage-users"
-					>
-						Manage Users
-					</NavLink>
+					{isEditorAdmin && (
+						<NavLink
+							className={({ isActive }) =>
+								"font-semibold w-full py-2 px-2 mb-1 text-center text-lg  " +
+								(isActive
+									? " bg-primary text-white"
+									: "bg-white text-gray-2 border border-gray-1")
+							}
+							to="reviews/all"
+						>
+							Reviews
+						</NavLink>
+					)}
+					{isAdmin && (
+						<NavLink
+							className={({ isActive }) =>
+								"font-semibold w-full py-2 px-2 mb-1 text-center text-lg  " +
+								(isActive
+									? " bg-primary text-white"
+									: "bg-white text-gray-2 border border-gray-1")
+							}
+							to="manage-users"
+						>
+							Manage Users
+						</NavLink>
+					)}
 				</div>
 			</div>
 			<div className="w-10/12 table-cell pt-3 pl-5">

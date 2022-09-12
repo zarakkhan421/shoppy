@@ -3,6 +3,7 @@ const OrderItems = require("../models/orderItems");
 const { failedResponse } = require("../utils/failedResponse");
 const { successfulResponse } = require("../utils/successfulResponse");
 const { totalOrderCost } = require("../utils/totalOrderCost");
+const { sendMail } = require("../utils/sendMail");
 
 exports.createOrder = async (req, res) => {
 	try {
@@ -10,13 +11,23 @@ exports.createOrder = async (req, res) => {
 		const shippingCost = req.body.orderItemsData.length * 2;
 		const totalCost = totalOrderCost(orderItemsData);
 		const orderData = { ...req.body, shippingCost, totalCost };
-		console.log("666", orderData);
 		const order = await Order.create(orderData);
 		console.log("rrr", order);
 		orderItemsData = orderItemsData.map((orderItem) => ({
 			...orderItem,
 			order: order.id,
 		}));
+		// send email
+		await sendMail({
+			email: req.body.customerDetails.email,
+			subject: "Order Made",
+			template: "orderMade",
+			templateData: {
+				customerDetails: req.body.customerDetails,
+				orderItems: req.body.orderItemsData,
+			},
+		});
+		console.log("dfdgeter");
 		console.log("222", orderItemsData);
 		const orderItems = await OrderItems.insertMany(orderItemsData);
 		console.log("sss", orderItems);

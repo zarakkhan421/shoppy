@@ -224,10 +224,10 @@ const SingleProduct = () => {
 						</div>
 					</div>
 					<div>
-						<h4>Reviews</h4>
+						<h4 className="font-xl font-semibold mt-2">Reviews</h4>
 						{reviews.map((review) => {
 							return (
-								<div className="mx-2 my-4 flex flex-col">
+								<div className="mx-2 my-2 flex flex-col">
 									<div className="flex">
 										<div className="mr-1">
 											<img

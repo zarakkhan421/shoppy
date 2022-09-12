@@ -1,16 +1,6 @@
 const nodeMailer = require("nodemailer");
-// const hbs = require("nodemailer-express-handlebars");
-// const ejs = require("ejs");
+const ejs = require("ejs");
 const path = require("path");
-// const handlebarOptions = {
-// 	viewEngine: {
-// 		extName: ".handlebars",
-// 		partialsDir: path.join(__dirname, "..", "templates", "partials"),
-// 		defaultLayout: false,
-// 	},
-// 	viewPath: path.join(__dirname, "..", "templates"),
-// 	extName: ".handlebars",
-// };
 const sendMail = async (options) => {
 	const transporter = nodeMailer.createTransport({
 		host: "smtp.google.com",
@@ -23,16 +13,15 @@ const sendMail = async (options) => {
 			pass: process.env.PASSWORD,
 		},
 	});
-	// transporter.use("compile", hbs(handlebarOptions));
-	// const html = ejs.renderFile(options.html);
+	const html = await ejs.renderFile(
+		path.join(__dirname, "../templates/" + options.template + ".ejs"),
+		{ templateData: options.templateData }
+	);
 	const mailOptions = {
 		from: process.env.MAIL,
 		to: options.email,
 		subject: options.subject,
-		html: options.template,
-		// text: options.message,
-		// template: options.template,
-		// context: { arr: ["d", "e"] },
+		html,
 	};
 	try {
 		await transporter.sendMail(mailOptions);

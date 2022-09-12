@@ -44,6 +44,38 @@ app.get("/forget", (req, res) => {
 		user: { firstName: "zarak" },
 	});
 });
+app.get("/order", (req, res) => {
+	res.render(path.join(__dirname, "templates/orderMade.ejs"), {
+		templateData: {
+			orderItems: [
+				{
+					name: "rwvfervetegbv",
+					price: 43,
+					quantity: 2,
+					sale: 2,
+				},
+				{
+					name: "fvdv",
+					price: 435,
+					quantity: 2,
+					sale: 2,
+				},
+				{
+					name: "fvdv",
+					price: 423,
+					quantity: 1,
+					sale: 3,
+				},
+			],
+			customerDetails: {
+				firstName: "eveve",
+				lastName: "sfvsfvsfv",
+				email: "zavssfv@gmail.com",
+				phoneNumber: "343435445",
+			},
+		},
+	});
+});
 app.get("/get-all-images", async (req, res) => {
 	let images = await cloudinary.v2.search
 		.expression("resource_type:image AND folder:shoppy/*")

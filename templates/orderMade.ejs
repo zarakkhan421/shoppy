@@ -1,0 +1,33 @@
+<%- include('./partials/header.ejs') %> <% customerDetails=
+templateData.customerDetails; orderItems=templateData.orderItems; %>
+<div class="order_made">
+	<div class="customers_details">
+		<div class="customers_name">
+			Name: <%= customerDetails.firstName + ' ' + customerDetails.lastName %>
+		</div>
+		<div class="customers_email">Email: <%= customerDetails.email %></div>
+		<div class="phone_number">
+			Phone Number: <%= customerDetails.phoneNumber %>
+		</div>
+	</div>
+	<table>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Price</th>
+				<th>Quantity</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% orderItems.forEach(function(item){ %>
+			<tr>
+				<td><%= item.name %></td>
+				<td><%= item.price %></td>
+				<td><%= item.quantity %></td>
+			</tr>
+			<% }) %>
+		</tbody>
+	</table>
+</div>
+
+<%- include('./partials/footer.ejs') %>
