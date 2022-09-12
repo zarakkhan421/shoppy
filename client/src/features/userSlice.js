@@ -19,7 +19,7 @@ export const refreshAuth = createAsyncThunk(
 		console.log("thunk api");
 		try {
 			const response = await axios.post(
-				`${SERVER_URL}/user/refresh-auth`,
+				`${SERVER_URL}user/refresh-auth`,
 				{},
 				{
 					withCredentials: true,
@@ -37,7 +37,7 @@ export const login = createAsyncThunk(
 	"auth/login",
 	async (userData, thunkAPI) => {
 		try {
-			const response = axios.post(`${SERVER_URL}/user/login`, userData, {
+			const response = axios.post(`${SERVER_URL}user/login`, userData, {
 				withCredentials: true,
 			});
 			toast.promise(response, {
@@ -60,7 +60,7 @@ export const register = createAsyncThunk(
 	"auth/register",
 	async (userData, thunkAPI) => {
 		try {
-			const response = axios.post(`${SERVER_URL}/user/register`, userData, {
+			const response = axios.post(`${SERVER_URL}user/register`, userData, {
 				withCredentials: true,
 			});
 			toast.promise(response, {
