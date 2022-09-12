@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 // require("dotenv").config();
-
+import { SERVER_URL } from "../config/Constants";
 const initialState = {
 	user: {},
 	accessToken: "",
@@ -19,7 +19,7 @@ export const refreshAuth = createAsyncThunk(
 		console.log("thunk api");
 		try {
 			const response = await axios.post(
-				"http://localhost:5000/api/user/refresh-auth",
+				`${SERVER_URL}/user/refresh-auth`,
 				{},
 				{
 					withCredentials: true,
@@ -37,13 +37,9 @@ export const login = createAsyncThunk(
 	"auth/login",
 	async (userData, thunkAPI) => {
 		try {
-			const response = axios.post(
-				"http://localhost:5000/api/user/login",
-				userData,
-				{
-					withCredentials: true,
-				}
-			);
+			const response = axios.post(`${SERVER_URL}/user/login`, userData, {
+				withCredentials: true,
+			});
 			toast.promise(response, {
 				pending: "LoggingIn, Please wait...",
 				success: "LoggedIn",
@@ -64,13 +60,9 @@ export const register = createAsyncThunk(
 	"auth/register",
 	async (userData, thunkAPI) => {
 		try {
-			const response = axios.post(
-				"http://localhost:5000/api/user/register",
-				userData,
-				{
-					withCredentials: true,
-				}
-			);
+			const response = axios.post(`${SERVER_URL}/user/register`, userData, {
+				withCredentials: true,
+			});
 			toast.promise(response, {
 				pending: "Please wait...",
 				success: "You have registered!",

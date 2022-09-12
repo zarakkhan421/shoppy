@@ -9,6 +9,7 @@ import useAxios from "../hooks/useAxios";
 import moment from "moment";
 import { AiOutlineHome } from "react-icons/ai";
 import { BsCurrencyDollar } from "react-icons/bs";
+import { SERVER_URL } from "../config/Constants";
 const SingleProduct = () => {
 	const [product, setProduct] = useState({});
 	const [reviews, setReviews] = useState([]);
@@ -44,9 +45,7 @@ const SingleProduct = () => {
 	useEffect(() => {
 		const getProduct = async () => {
 			try {
-				const response = await axios.get(
-					`http://localhost:5000/api/products/${productId}`
-				);
+				const response = await axios.get(`${SERVER_URL}/products/${productId}`);
 				setProduct(response.data.serverData.product);
 				console.log(response);
 			} catch (error) {

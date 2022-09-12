@@ -12,7 +12,6 @@ app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: false }));
 app.use(express.json({ limit: "50mb" }));
-// app.use(express.static(path.join(__dirname, "..", "templates/styles.css")));
 const PORT = process.env.PORT || 5000;
 connectDB();
 path = require("path");
@@ -31,14 +30,6 @@ const reviews = require("./routes/reviews");
 const orderItems = require("./routes/orderItems");
 const User = require("./models/users");
 
-if (process.env.NODE_ENV === "production") {
-	console.log("loading static");
-	app.use(express.static("client/build"));
-	app.get("*", (req, res) => {
-		res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
-	});
-}
-
 app.use("/api/products", products);
 app.use("/api/user", user);
 app.use("/api/orders", orders);
@@ -48,7 +39,7 @@ app.use("/api/order-items", orderItems);
 // email template testing
 app.get("/forget", (req, res) => {
 	res.render(path.join(__dirname, "templates/forgetPasswordEmail.ejs"), {
-		resetLink: "http://localhost:5000/forget",
+		resetLink: `${process.env.SERVER_URL}/forget`,
 		user: { firstName: "zarak" },
 	});
 });
@@ -105,7 +96,13 @@ app.get("/get-all-images", async (req, res) => {
 	}
 	res.json({ images, usersImages });
 });
-
+if (process.env.NODE_ENV === "production") {
+	console.log("loading static");
+	app.use(express.static("client/build"));
+	app.get("*", (req, res) => {
+		res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+	});
+}
 app.listen(process.env.PORT || 5000, () =>
 	console.log(`server running on ${process.env.PORT}`)
 );

@@ -1,6 +1,7 @@
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import { useDispatch, useSelector } from "react-redux";
+import { SERVER_URL } from "../config/Constants";
 import { refreshAccessToken } from "../features/userSlice";
 import { getAccessToken } from "../features/userSlice";
 
@@ -9,7 +10,7 @@ const useAxiosPrivate = () => {
 	const dispatch = useDispatch();
 	console.log("3333333333", accessToken);
 	const axiosPrivateInstance = axios.create({
-		baseURL: "http://localhost:5000/api",
+		baseURL: SERVER_URL,
 		headers: {
 			"Content-Type": "application/json",
 		},
@@ -24,7 +25,7 @@ const useAxiosPrivate = () => {
 		if (expireTime < date) {
 			console.log("in refresh t");
 			const response = await axios.get(
-				"http://localhost:5000/api/user/refresh-access-token",
+				`${SERVER_URL}/user/refresh-access-token`,
 				{
 					withCredentials: true,
 				}
