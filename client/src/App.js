@@ -31,6 +31,7 @@ import ForgetPassword from "./pages/auth/ForgetPassword";
 import ChangeRole from "./pages/dashboard/outlets/ChangeRole";
 import ManageUsers from "./pages/dashboard/outlets/ManageUsers";
 import { useEffect, useState } from "react";
+
 function App() {
 	const reduxState = useSelector((state) => state);
 	const isLoggedIn = useSelector(getIsLoggedIn);
@@ -42,8 +43,7 @@ function App() {
 	if (!localStorage.getItem("login")) {
 		console.log("not set");
 		localStorage.setItem("login", "false");
-	}
-	if (
+	} else if (
 		!reduxState.auth.accessToken &&
 		!reduxState.auth.isLoggedIn &&
 		localStorage.getItem("login") === "true"

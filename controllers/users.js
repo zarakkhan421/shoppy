@@ -79,6 +79,7 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
 	console.log("sdd");
+	console.log("login reached");
 	try {
 		const { email, password } = req.body;
 		let foundUser = await User.findOne({ email }).select("+password");

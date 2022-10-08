@@ -13,8 +13,8 @@ const HomeSection = (props) => {
 				<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-3">
 					{products.slice(0, 8).map((product) => {
 						return (
-							<div className="col-span-1">
-								<Product key={product._id} product={product} />
+							<div className="col-span-1" key={product._id}>
+								<Product product={product} />
 							</div>
 						);
 					})}

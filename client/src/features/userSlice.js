@@ -46,6 +46,7 @@ export const login = createAsyncThunk(
 			});
 			const resolved = await response;
 			if (resolved.data.success) {
+				console.log("rtrtbethn");
 				localStorage.setItem("login", "true");
 			}
 			console.log("response login", await response);
