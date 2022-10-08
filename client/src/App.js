@@ -40,16 +40,19 @@ function App() {
 	const navigate = useNavigate();
 	const location = useLocation();
 	console.log(location);
-	if (!localStorage.getItem("login")) {
-		console.log("not set");
-		localStorage.setItem("login", "false");
-	} else if (
-		!reduxState.auth.accessToken &&
-		!reduxState.auth.isLoggedIn &&
-		localStorage.getItem("login") === "true"
-	) {
-		dispatch(refreshAuth());
-	}
+	useEffect(()=>{
+
+		if (!localStorage.getItem("login")) {
+			console.log("not set");
+			localStorage.setItem("login", "false");
+		} else if (
+			!reduxState.auth.accessToken &&
+			!reduxState.auth.isLoggedIn &&
+			localStorage.getItem("login") === "true"
+		) {
+			dispatch(refreshAuth());
+		}
+	},[])
 
 	return (
 		<div>
